@@ -1,0 +1,282 @@
+//
+//	XModel.cpp
+//		Author:HIROMASA IKEDA	DATE:2018/10/19
+//===============================================
+//	変更者 Changed By 
+//		Name:Minoda Takamasa DATE:2018/10/23
+//		Name:HIROMASA IKEDA	 DATE:2018/11/15
+//
+//-----------------------------------------------
+
+//===============================================
+//	インクルード	include
+//===============================================
+#define _CRT_SECURE_NO_WARNINGS
+#include<d3dx9.h>
+#include<string.h>
+
+#include"XModel.h"
+#include"System.h"
+
+//Class
+#include"CMesh.h"
+
+//===============================================
+//	マクロ定義		define
+//===============================================
+#define MODELS_FILE ("Models/")
+#define MODELS_FILE_NUM (60)
+#define MODELS_NAME_NUM (30)
+
+//アクセス
+struct Path
+{
+ 	NXModel::Name name;
+	const char FileName[MODELS_FILE_NUM];		//モデルの入っているファイル(テクスチャを参照する為)
+	const char ModelName[MODELS_NAME_NUM];	//xモデル
+};
+
+//===============================================
+//	XModel 名前空間
+//===============================================
+namespace NXModel
+{
+	//==============================================
+	//	各モデルデータ
+	//==============================================
+
+	//各モデルのPathを設定
+	static Path path[] =
+	{
+		{ AIRPLANE_BODY,"Airplane_Body","Airplane_Body.x" },
+		{ AIRPLANE_PROPELLER,"Airplane_Propeller","Airplane_Propeller.x" },
+		{ AIRPLANE_WingBD,"Airplane_WingBD","Airplane_WingBD.x" },
+		{ AIRPLANE_WingBU,"Airplane_WingBU","Airplane_WingBU.x" },
+		{ AIRPLANE_WingLD,"Airplane_WingLD","Airplane_WingLD.x" },
+		{ AIRPLANE_WingLU,"Airplane_WingLU","Airplane_WingLU.x" },
+		{ AIRPLANE_WingRD,"Airplane_WingRD","Airplane_WingRD.x" },
+		{ AIRPLANE_WingRU,"Airplane_WingRU","Airplane_WingRU.x" },
+		{ AIRPLANE_MODEL,"Airplane","Airplane.x" },
+		{ TREE,"Tree","Tree.x" }
+	};
+
+	//データ保存
+	static Data Index[NAME_END];
+
+	//==============================================
+	//	関数
+	//==============================================
+
+	int Load(CXModelMesh* LoadMesh,char* ModelName,char* path)
+	{
+
+		HRESULT hr;
+		char FilePath[MODELS_FILE_NUM + MODELS_NAME_NUM + 10] = { "\0" };
+
+		//モデルへのアクセス
+		strcat(FilePath, MODELS_FILE);
+		strcat(FilePath, path);
+		strcat(FilePath, "/");
+		strcat(FilePath, ModelName);
+
+		LPD3DXBUFFER pD3DXMtrlBuffer = NULL;
+
+		hr = D3DXLoadMeshFromX(
+			FilePath,
+			D3DXMESH_SYSTEMMEM,
+			System_GetDevice(),
+			NULL,
+			&pD3DXMtrlBuffer,
+			NULL,
+			&LoadMesh->dwNumMaterials,
+			&LoadMesh->pMesh
+		);
+
+		if (FAILED(hr))
+		{
+			char ErrorText[100] = { "\0" };
+			strcat(ErrorText, FilePath);
+			strcat(ErrorText, "\nモデルデータが読み込めませんでした。");
+
+			MessageBox(*System_GethWnd(), ErrorText, "エラー", MB_OK);
+			DestroyWindow(*System_GethWnd());
+			return;
+		}
+
+		//モデルのテクスチャへのアクセス
+		strcpy(FilePath, "\0");	//初期化
+		strcat(FilePath, MODELS_FILE);
+		strcat(FilePath, FileName);
+		strcat(FilePath, "/");
+
+		D3DXMATERIAL* d3dxMaterials = (D3DXMATERIAL*)pD3DXMtrlBuffer->GetBufferPointer();
+		Index[index].pMaterials = new D3DMATERIAL9[Index[index].dwNumMaterials];
+		Index[index].pTextures = new LPDIRECT3DTEXTURE9[Index[index].dwNumMaterials];
+
+		D3DXMATERIAL* pD3DXMaterials = (D3DXMATERIAL*)pD3DXMtrlBuffer->GetBufferPointer();
+
+		for (DWORD i = 0; i < Index[index].dwNumMaterials; i++)
+		{
+			Index[index].pMaterials[i] = d3dxMaterials[i].MatD3D;
+			Index[index].pMaterials[i].Ambient = Index[index].pMaterials[i].Diffuse;
+			Index[index].pTextures[i] = NULL;
+
+			if (d3dxMaterials[i].pTextureFilename != NULL &&
+				lstrlen(d3dxMaterials[i].pTextureFilename) > 0)
+			{
+				//テクスチャのパス
+				char TexturePath[200] = { "\0" };
+				strcat(TexturePath, FilePath);
+				strcat(TexturePath, d3dxMaterials[i].pTextureFilename);
+
+				hr = D3DXCreateTextureFromFile(
+					System_GetDevice(),
+					TexturePath,
+					&Index[index].pTextures[i]
+				);
+
+				if (FAILED(hr))
+				{
+					char ErrorText[200] = { "\0" };
+					strcat(ErrorText, TexturePath);
+					strcat(ErrorText, "\nテクスチャ読み込みに失敗しました。");
+
+					MessageBox(NULL, ErrorText, "エラー", MB_OK);
+				}
+			}
+		}
+		pD3DXMtrlBuffer->Release();
+	}
+
+	//---------------------------------
+	//	モデル読み込み
+	//---------------------------------
+	void Load(const int index)
+	{
+		HRESULT hr;
+		char FilePath[MODELS_FILE_NUM + MODELS_NAME_NUM + 10] = {"\0"};
+
+		//モデルへのアクセス
+		strcat(FilePath,MODELS_FILE);
+		strcat(FilePath,path[index].FileName);
+		strcat(FilePath,"/");
+		strcat(FilePath,path[index].ModelName);
+
+		LPD3DXBUFFER pD3DXMtrlBuffer = NULL;
+
+		hr = D3DXLoadMeshFromX(
+			FilePath,
+			D3DXMESH_SYSTEMMEM,
+			System_GetDevice(),
+			NULL,
+			&pD3DXMtrlBuffer,
+			NULL,
+			&Index[index].dwNumMaterials,
+			&Index[index].pMesh
+		);
+
+		if (FAILED(hr))
+		{
+			char ErrorText[100] = { "\0" };
+			strcat(ErrorText, FilePath);
+			strcat(ErrorText, "\nモデルデータが読み込めませんでした。");
+
+			MessageBox(*System_GethWnd(), ErrorText, "エラー", MB_OK);
+			DestroyWindow(*System_GethWnd());
+			return;
+		}
+
+		//モデルのテクスチャへのアクセス
+		strcpy(FilePath, "\0");	//初期化
+		strcat(FilePath, MODELS_FILE);
+		strcat(FilePath, path[index].FileName);
+		strcat(FilePath, "/");
+		
+		D3DXMATERIAL* d3dxMaterials = (D3DXMATERIAL*)pD3DXMtrlBuffer->GetBufferPointer();
+		Index[index].pMaterials = new D3DMATERIAL9[Index[index].dwNumMaterials];
+		Index[index].pTextures = new LPDIRECT3DTEXTURE9[Index[index].dwNumMaterials];
+
+		D3DXMATERIAL* pD3DXMaterials = (D3DXMATERIAL*)pD3DXMtrlBuffer->GetBufferPointer();
+
+		for (DWORD i = 0; i < Index[index].dwNumMaterials; i++)
+		{
+			Index[index].pMaterials[i] = d3dxMaterials[i].MatD3D;
+			Index[index].pMaterials[i].Ambient = Index[index].pMaterials[i].Diffuse;
+			Index[index].pTextures[i] = NULL;
+
+			if (d3dxMaterials[i].pTextureFilename != NULL &&
+				lstrlen(d3dxMaterials[i].pTextureFilename) > 0)
+			{
+				//テクスチャのパス
+				char TexturePath[200] = { "\0" };
+				strcat(TexturePath, FilePath);
+				strcat(TexturePath, d3dxMaterials[i].pTextureFilename);
+
+				hr = D3DXCreateTextureFromFile(
+					System_GetDevice(),
+					TexturePath,
+					&Index[index].pTextures[i]
+				);
+
+				if (FAILED(hr))
+				{
+					char ErrorText[200] = { "\0" };
+					strcat(ErrorText, TexturePath);
+					strcat(ErrorText, "\nテクスチャ読み込みに失敗しました。");
+
+					MessageBox(NULL, ErrorText, "エラー", MB_OK);
+				}
+			}
+		}
+		pD3DXMtrlBuffer->Release();
+	}
+
+	//---------------------------------
+	//	初期化処理
+	//---------------------------------
+	void Initialize()
+	{
+		for(int index = 0; index<NAME_END; index++)
+		{
+			Load(index);
+		}
+	}
+
+	//---------------------------------
+	//	描画
+	//---------------------------------
+	void Render(const int index)
+	{
+		//マテリアルの数だけループさせる
+		for (DWORD i = 0; i < Index[index].dwNumMaterials; i++)
+		{
+			//マテリアル設定
+			System_GetDevice()->SetMaterial(&Index[index].pMaterials[i]);
+			//テクスチャ設定
+			System_GetDevice()->SetTexture(0, Index[index].pTextures[i]);
+			//レンダリング
+			Index[index].pMesh->DrawSubset(i);
+		}
+	}
+
+	//---------------------------------
+	//	終了処理
+	//---------------------------------
+	void Finalize()
+	{
+		for (DWORD i = 0; i < NAME_END; i++)
+		{
+			delete Index[i].pTextures;
+			delete Index[i].pMaterials;
+			Index[i].pMesh->Release();
+		}
+	}
+
+	//---------------------------------
+	//	モデル データ取得
+	//---------------------------------
+	Data* Get(const Name name)
+	{
+		return &Index[name];
+	}
+}
