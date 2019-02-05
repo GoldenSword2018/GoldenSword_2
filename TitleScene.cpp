@@ -32,6 +32,8 @@
 
 #include"Score.h"
 
+#include"LeaderBoard.h"
+
 //===============================================
 //	ƒ}ƒNƒ’è‹`		define
 //===============================================
@@ -72,6 +74,9 @@ void TitleScene::Initialize()
 
 	Fade_Triger(false, 10, D3DCOLOR_RGBA(0, 0, 0, 255));
 	Score_Initialize();
+	LeaderBoard::SetNewScore(10);
+	LeaderBoard::SetNewScore(200);
+	LeaderBoard::SetNewScore(150);
 }
 
 void TitleScene::UpdateBegin()
@@ -90,6 +95,7 @@ void TitleScene::Render()
 	TitleImage->Render();
 	GameStart->Render();
 	Score_Render();
+	LeaderBoard::Render();
 }
 
 void TitleScene::UpdateEnd()
