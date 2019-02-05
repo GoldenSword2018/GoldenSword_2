@@ -280,8 +280,8 @@ namespace NMeshField
 
 		g_pSkyDome_VertexBuffer->Lock(0,0,(void**)&g_pSkyDome_Vertex,0);
 
-		float th = (float)(1.0f / MF_SKYDORM_GRID_HEIGHT);
-		float tw = (float)(1.0f / MF_SKYDORM_GRID_WIDTH);
+		float tw = (float)(MF_SKYDORM_TEXGRID_WIDTH / MF_SKYDORM_GRID_WIDTH);
+		float th = (float)(MF_SKYDORM_TEXGRID_HEIGHT / MF_SKYDORM_GRID_HEIGHT);
 
 		for(int i = 0; i< MF_SKYDORM_GRID_HEIGHT + 1; i++)
 		{

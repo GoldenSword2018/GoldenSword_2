@@ -55,6 +55,9 @@
 #define MF_SKYDORM_ANGLE_WIDTH	( (2*M_PI) / MF_SKYDORM_GRID_WIDTH ) //1グリッド角度
 #define MF_SKYDORM_ANGLE_HEIGHT	( (M_PI_2) / MF_SKYDORM_GRID_HEIGHT) //1グリッド
 
+#define MF_SKYDORM_TEXGRID_WIDTH  (9.0f)	//横のテクスチャ反復数
+#define MF_SKYDORM_TEXGRID_HEIGHT (6.0f)	//縦のテクスチャ反復数
+
 //-------------------------------------
 //	Wall
 //-------------------------------------
