@@ -30,6 +30,8 @@
 //Scene
 #include"GameScene.h"
 
+#include"Score.h"
+
 //===============================================
 //	ƒ}ƒNƒ’è‹`		define
 //===============================================
@@ -49,6 +51,8 @@ static Camera MainCamera;
 //Assets
 static NRender2D::UI::MouseUI* GameStart;
 static NRender2D::CSprite* TitleImage;
+
+static int score = 0;
 
 //===============================================
 //	ŠÖ”
@@ -70,11 +74,13 @@ void TitleScene::Initialize()
 	);
 
 	Fade_Triger(false, 10, D3DCOLOR_RGBA(0, 0, 0, 255));
+	Score_Initialize();
 }
 
 void TitleScene::UpdateBegin()
 {
-
+	Score_Plus(1);
+	//score++;
 	MainCamera.Update();
 	if(GameStart->Click())
 	{
@@ -87,6 +93,8 @@ void TitleScene::Render()
 {
 	TitleImage->Render();
 	GameStart->Render();
+	Score_Render();
+	//Number_Render({ 100,100 }, score);
 }
 
 void TitleScene::UpdateEnd()
