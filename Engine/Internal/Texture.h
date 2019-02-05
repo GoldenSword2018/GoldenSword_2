@@ -34,6 +34,7 @@ namespace NTexture
 		TargetText,
 		NumberTex,
 		ScoreTex,
+		BlockTex,
 		NAME_NONE,		//指定無い場合
 		NAME_END,	//テクスチャ終わり
 	};

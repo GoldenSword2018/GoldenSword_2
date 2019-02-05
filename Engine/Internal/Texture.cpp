@@ -40,6 +40,7 @@ namespace NTexture
 		{ TargetText,"Target_Text.png"},
 		{ NumberTex,"Number.png"},
 		{ ScoreTex,"Score.png"},
+		{ BlockTex,"block2.png"},
 		{ NAME_NONE,"none.png" }
 	};
 	

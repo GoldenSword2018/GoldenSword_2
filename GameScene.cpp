@@ -182,7 +182,7 @@ void GameScene::Render()
 	World = Scale * Trans;
 
 	System_GetDevice()->SetTransform(D3DTS_WORLD, &World);
-	System_GetDevice()->SetTexture(0,NTexture::Get_Texture(NTexture::NAME_NONE));
+	System_GetDevice()->SetTexture(0,NTexture::Get_Texture(NTexture::BlockTex));
 	Cube_Render();
 	Time_Render({200.0f,50.0f});
 }
