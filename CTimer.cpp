@@ -1,6 +1,6 @@
 //
 //	CTimer.cpp
-//		Author:	DATE:
+//		Author:YU NISHIMAKI 	DATE:2019/02/05
 //===============================================
 //	変更者 Changed By
 //		Name:	DATE:
@@ -32,10 +32,10 @@
 //-------------------------------------
 //	静的メンバ変数初期化
 //-------------------------------------
-int FrameCount = 0;
-int LimitTime = LIMIT_TIME * 60;
-int RemainTime = (LimitTime - FrameCount) / 60;
-bool IsActive = false;
+int Timer::FrameCount = 0;
+int Timer::LimitTime = LIMIT_TIME * 60;
+int Timer::RemainTime = (LimitTime - FrameCount) / 60;
+bool Timer::IsActive = false;
 
 //-------------------------------------
 //	カウントスタート
