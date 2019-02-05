@@ -1,6 +1,6 @@
 //
 //	CTimer.cpp
-//		Author:	DATE:
+//		Author:YU NISHIMAKI 	DATE:2019/02/05
 //===============================================
 //	ïœçXé“ Changed By
 //		Name:	DATE:
@@ -34,7 +34,7 @@
 //-------------------------------------
 int Timer::FrameCount = 0;
 int Timer::LimitTime = LIMIT_TIME * 60;
-int Timer::RemainTime = (Timer::LimitTime - Timer::FrameCount) / 60;
+int Timer::RemainTime = (LimitTime - FrameCount) / 60;
 bool Timer::IsActive = false;
 
 //-------------------------------------
