@@ -25,8 +25,8 @@ namespace NTexture
 	{
 		CubeTexture,
 		BillBoardTex,
-		MeshFieldTex,
-		MeshCylinderTex,
+		MeshField_Ground,
+		MeshField_Sky,
 		Billboard_Burst,
 		Billboard_Shadow,
 		Mesh_Wall,

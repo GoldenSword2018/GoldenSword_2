@@ -31,8 +31,8 @@ namespace NTexture
 	{
 		{ CubeTexture,"tex.png" },
 		{ BillBoardTex,"bullet000.png" },
-		{ MeshFieldTex,"MeshGround.jpg" },
-		{ MeshCylinderTex,"skytex1.jpeg" },
+		{ MeshField_Ground,"MeshField_Ground.png" },
+		{ MeshField_Sky,"MeshField_Sky.png" },
 		{ Billboard_Burst,"bomb.png" },
 		{ Billboard_Shadow,"shadow000.jpg" },
 		{ Mesh_Wall,"Wall.jpg" },
