@@ -112,6 +112,7 @@ public:
 	void Finalize();
 private:
 	void SortForRanking( void );
+	void ScoreDraw( D3DXVECTOR2 _Pos, PersonalScore _Score );
 };
 LeaderBoardModule* LeaderBoardModule::pInstance = nullptr;
 
@@ -148,15 +149,16 @@ LeaderBoardModule* LeaderBoardModule::GetInstance()
 //
 // 関数
 //
-void ScoreDraw( D3DXVECTOR2 _Pos, PersonalScore _Score )
+void LeaderBoardModule::ScoreDraw( D3DXVECTOR2 _Pos, PersonalScore _Score )
 {
 	int score = _Score.score;
 	for( int i = 0; i < FIG; i++ )
 	{
-		unsigned int number = _Score.score % 10;
+		unsigned int number = score % 10;
 		score /= 10;
 		Number_Render( { _Pos.x + ( NTexture::Get_Width( NTexture::ScoreTex ) * 0.1f ) * ( FIG - ( i + 1 ) ), _Pos.y }, number );
 	}
+
 }
 void LeaderBoardModule::Render( void )
 {
@@ -170,7 +172,7 @@ void LeaderBoardModule::Render( void )
 	}
 	// ランキングのところ
 	float marginY = 10;
-	for( unsigned int sc = 0; sc < RANKING_SCORE_MAX && ( unsigned int ) ScoreCollection.size(); sc++ )
+	for( unsigned int sc = 0; sc < ( unsigned int ) ScoreCollection.size(); sc++ )
 	{
 		ScoreDraw( D3DXVECTOR2( rankingScorePos.x, rankingScorePos.y + marginY * sc ), ScoreCollection.at( sc ) );
 	}
@@ -179,13 +181,17 @@ void LeaderBoardModule::Finalize()
 {
 	delete this;
 }
+
+//
+// プライベート関数
+//
 void LeaderBoardModule::SetNewScore( unsigned int _NewScore )
 {
 	if( pNewScore == nullptr )
 	{
 		pNewScore = new PersonalScore( _NewScore );
 	}
-		
+	
 	pNewScore->score = _NewScore;
 	
 	ScoreCollection.push_back( PersonalScore( _NewScore ) );
@@ -226,10 +232,6 @@ void LeaderBoardModule::SortForRanking( void )
 	}
 
 
-	if( (size_t) 1 < ScoreCollection.size() )
-	{
-		// チェック用
-	}
 
 	newScoreCollection.push_back( PersonalScore( *ScoreCollection.begin() ) );
 	newScoreCollection.swap( ScoreCollection );
