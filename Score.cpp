@@ -42,7 +42,7 @@ void Score_Render(void)
 	{
 		int number = score % 10;
 		score /= 10;
-		Number_Render({SCORE_X + (NTexture::Get_Width(NTexture::ScoreTex)*0.1f) * (FIG - (i + 1)), SCORE_Y}, number);
+		Number_Render({SCORE_X + (NTexture::Get_Width(NTexture::ScoreTex)*0.15f) * (FIG - (i + 1)), SCORE_Y}, number);
 	}
 }
 

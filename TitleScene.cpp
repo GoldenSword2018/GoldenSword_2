@@ -51,9 +51,6 @@ static Camera MainCamera;
 //Assets
 static NRender2D::UI::MouseUI* GameStart;
 static NRender2D::CSprite* TitleImage;
-
-static int score = 0;
-
 //===============================================
 //	ŠÖ”
 //===============================================
@@ -80,7 +77,6 @@ void TitleScene::Initialize()
 void TitleScene::UpdateBegin()
 {
 	Score_Plus(1);
-	//score++;
 	MainCamera.Update();
 	if(GameStart->Click())
 	{
@@ -94,7 +90,6 @@ void TitleScene::Render()
 	TitleImage->Render();
 	GameStart->Render();
 	Score_Render();
-	//Number_Render({ 100,100 }, score);
 }
 
 void TitleScene::UpdateEnd()

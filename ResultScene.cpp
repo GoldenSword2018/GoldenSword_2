@@ -76,7 +76,7 @@ void ResultScene::Render()
 	sprintf(text,"TIME:%d", Get_GameTime());
 	Animation_Score(TexScore->Transform(), ScoreTex,&AnimaScore,Get_GameTime(),true,false,4);
 	DebugFont_Draw(WINDOWSCREEN_WIDTH_2,WINDOWSCREEN_HEIGHT_2,text);
-	NMeshField::Render_Ground({0.0f,0.0f,0.0f}, NTexture::MeshFieldTex);
+	NMeshField::Render_Ground({0.0f,0.0f,0.0f}, NTexture::MeshField_Ground);
 	Result->Render();
 }
 
