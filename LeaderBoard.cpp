@@ -210,7 +210,7 @@ void LeaderBoardModule::SortForRanking( void )
 	while( (size_t) 1 < ScoreCollection.size() )
 	{
 		maxScore = ScoreCollection.at( 0 );
-
+		maxIte = 0;
 		for( unsigned int sc = 0; sc < ScoreCollection.size(); sc++ )
 		{
 			if( maxScore.score  < ScoreCollection.at( sc ).score )

@@ -34,7 +34,6 @@ namespace LeaderBoard
 {
 void Init( void );
 void SetNewScore( unsigned int NewScore );
-void Update( void );
 void Render( void );
 void Finalize( void ); // åƒÇ‘Ç∆è¡Ç¶ÇÈÇº
 }
