@@ -39,6 +39,7 @@ namespace NTexture
 		{ Reticle,"Reticle.png"},
 		{ TargetText,"Target_Text.png"},
 		{ NumberTex,"Number.png"},
+		{ ScoreTex,"Score.png"},
 		{ NAME_NONE,"none.png" }
 	};
 	

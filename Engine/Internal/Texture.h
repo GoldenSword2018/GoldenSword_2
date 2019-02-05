@@ -33,6 +33,7 @@ namespace NTexture
 		Reticle,
 		TargetText,
 		NumberTex,
+		ScoreTex,
 		NAME_NONE,		//指定無い場合
 		NAME_END,	//テクスチャ終わり
 	};
