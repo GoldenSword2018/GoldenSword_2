@@ -41,6 +41,9 @@
 #include"Cube.h"
 #include"CPlayer.h"
 
+#include"CTimer.h"
+#include"TimeRender.h"
+
 //===============================================
 //	ƒ}ƒNƒ’è‹`		define
 //===============================================
@@ -110,6 +113,7 @@ void GameScene::Initialize()
 
 	g_Time = SystemTimer_GetAbsoluteTime();
 	Cube_Initialize();
+	Timer::Start();
 }
 
 //-------------------------------------
@@ -142,6 +146,8 @@ void GameScene::UpdateBegin()
 		NSCENE::LoadScene(Get_ResultScene());
 		Fade_Triger(true, 10, D3DCOLOR_RGBA(255, 255, 255, 255));
 	}
+
+	Timer::Update(Get_ResultScene());
 }
 
 //-------------------------------------
@@ -149,7 +155,7 @@ void GameScene::UpdateBegin()
 //-------------------------------------
 void GameScene::Render()
 {
-	NMeshField::Render_SkyDome(Player->transform->Get_Position(), NTexture::MeshCylinderTex);
+	NMeshField::Render_SkyDome(Player->transform->Get_Position(), NTexture::MeshField_Sky);
 
 	//wall
 	NMeshField::Render_Wall(StageWall[0], { 1.0f,1.0f,1.0f }, { 0.0f, 0.0f,				0.0f }, NTexture::Mesh_Wall);
@@ -157,7 +163,7 @@ void GameScene::Render()
 	NMeshField::Render_Wall(StageWall[2], { 1.0f,1.0f,1.0f }, { 0.0f, (float)(M_PI),	0.0f }, NTexture::Mesh_Wall);
 	NMeshField::Render_Wall(StageWall[3], { 1.0f,1.0f,1.0f }, { 0.0f, (float)(-M_PI_2),	0.0f }, NTexture::Mesh_Wall);
 
-	NMeshField::Render_Ground(GroundPos, NTexture::MeshFieldTex);
+	NMeshField::Render_Ground(GroundPos, NTexture::MeshField_Ground);
 	if (Get_TargetNum() > 0)
 	{
 		NRender2D::UI::CircleIndicator({ 120,500 }, D3DCOLOR_RGBA(255, 255, 255, 255), D3DCOLOR_RGBA(255, 0, 0, 255), 50, 20, g_MaxTarget - Get_TargetNum(), g_MaxTarget);
@@ -178,6 +184,7 @@ void GameScene::Render()
 	System_GetDevice()->SetTransform(D3DTS_WORLD, &World);
 	System_GetDevice()->SetTexture(0,NTexture::Get_Texture(NTexture::NAME_NONE));
 	Cube_Render();
+	Time_Render({200.0f,50.0f});
 }
 
 //-------------------------------------
@@ -198,6 +205,7 @@ void GameScene::Finalize()
 	delete Player;
 	g_Time = SystemTimer_GetAbsoluteTime() - g_Time;
 	Cube_Finalize();
+	Timer::Stop();
 }
 
 //-------------------------------------
