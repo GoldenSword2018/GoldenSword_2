@@ -1,6 +1,6 @@
 //
-//	ResultScene.h
-//		Author:	DATE:
+//	CTimer.h
+//		Author:YU NISHIMAKI 	DATE:2019/02/05
 //===============================================
 //	変更者 Changed By
 //		Name:	DATE:
@@ -8,20 +8,22 @@
 //-----------------------------------------------
 
 #pragma once
-#ifndef RESULTSCENE_H
-#define RESULTSCENE_H
+#ifndef CTIMER_H
+#define CTIMER_H
 
 //================================================
 //	インクルード	include
 //================================================
 #include"common.h"
 #include"Scene.h"
+#include"ResultScene.h"
 
 //Class
 
 //================================================
 //	マクロ定義	define
 //================================================
+#define LIMIT_TIME			(60)	// デフォルトの制限時間
 
 
 //================================================
@@ -33,6 +35,7 @@
 //	構造体		struct/typedef
 //================================================
 
+
 //================================================
 //	グローバル変数　global
 //================================================
@@ -42,18 +45,25 @@
 //	クラス		class
 //================================================
 
-class ResultScene:public NSCENE::AScene
+
+//-------------------------------------
+//	Timerクラス
+//-------------------------------------
+class Timer
 {
+private:
+	static int FrameCount;			// フレームカウンター
+	static int LimitTime;			// 制限時間（フレーム単位）
+	static int RemainTime;			// 残り時間（秒単位）
+	static bool IsActive;			// タイマー進行中かどうか
+
 public:
-	ResultScene() :AScene("Result") {};
-public:
-	void Initialize();
-	void UpdateBegin();
-	void Render();
-	void UpdateEnd();
-	void Finalize();
+	static void Start();			// カウントスタート
+	static void Stop();				// カウントストップ
+	static void Reset();			// フレームカウントリセット
+	static void Update(NSCENE::AScene* pNextScene);			// 更新
+	static int GetTime();			// 残り時間取得
 };
 
-NSCENE::AScene* Get_ResultScene();
 
 #endif

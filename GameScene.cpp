@@ -38,6 +38,8 @@
 #include"Sprite.h"
 #include"Lighting.h"
 
+#include"Cube.h"
+
 //===============================================
 //	ƒ}ƒNƒ’è‹`		define
 //===============================================
@@ -131,6 +133,7 @@ void GameScene::Initialize()
 	Fade_Triger(false, 100.0f, D3DCOLOR_RGBA(255, 255, 255, 255));
 
 	g_Time = SystemTimer_GetAbsoluteTime();
+	Cube_Initialize();
 }
 
 //-------------------------------------
@@ -187,6 +190,18 @@ void GameScene::Render()
 	Player->Render();
 	CBullet::Render();
 	NRender2D::Sprite({ 120,500 }, { 100,50 }, D3DCOLOR_RGBA(255, 255, 255, 255), NTexture::Get_Texture(NTexture::TargetText));
+	
+	D3DXMATRIX World;
+	D3DXMATRIX Trans;
+	D3DXMATRIX Scale;
+	D3DXMatrixTranslation(&Trans,0.0f,5.0f,0.0f);
+	D3DXMatrixScaling(&Scale,1.0f,1.0f,1.0f);
+
+	World = Scale * Trans;
+
+	System_GetDevice()->SetTransform(D3DTS_WORLD, &World);
+	System_GetDevice()->SetTexture(0,NTexture::Get_Texture(NTexture::NAME_NONE));
+	Cube_Render();
 }
 
 //-------------------------------------
@@ -206,6 +221,7 @@ void GameScene::Finalize()
 	CTarget::g_Finalize();
 	delete Player;
 	g_Time = SystemTimer_GetAbsoluteTime() - g_Time;
+	Cube_Finalize();
 }
 
 //-------------------------------------
