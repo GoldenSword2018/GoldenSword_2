@@ -49,6 +49,7 @@ class CBullet:public NRender3D::CGameObject
 {
 private:
 	NTexture::CAnimation animation;
+	D3DXMATRIX mtxWorld;
 public:
 	bool bEnable;
 	int frame;
