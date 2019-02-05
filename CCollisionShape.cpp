@@ -314,3 +314,98 @@ float CollisionCheck::LenSegOnSeparateAxis( D3DXVECTOR3 *Sep, D3DXVECTOR3 *e1, D
 	float r3 = e3 ? ( fabs( D3DXVec3Dot( Sep, e3 ) ) ) : 0;
 	return r1 + r2 + r3;
 }
+
+void Collision_PushBack(ShapeOBB *pShapeMovable, ShapeOBB *pShapeStable)
+{
+
+	float diffX = (pShapeStable->pParentTransform->Get_Position().x - pShapeMovable->pParentTransform->Get_Position().x);		// X座標差分
+	float diffY = (pShapeStable->pParentTransform->Get_Position().y - pShapeMovable->pParentTransform->Get_Position().y);		// Y座標差分
+	float diffZ = (pShapeStable->pParentTransform->Get_Position().z - pShapeMovable->pParentTransform->Get_Position().z);		// Z座標差分
+
+	float absX = fabs(diffX);														// X差分絶対値
+	float absY = fabs(diffY);														// Y差分絶対値
+	float absZ = fabs(diffZ);														// Z差分絶対値
+
+	float lX = (pShapeStable->Length[1] + pShapeMovable->Length[1]) - absX;			// Xめり込み量
+	float lY = (pShapeStable->Length[2] + pShapeMovable->Length[2]) - absY;			// Yめり込み量
+	float lZ = (pShapeStable->Length[0] + pShapeMovable->Length[0]) - absZ;			// Zめり込み量
+
+	if (lX > lY)
+	{
+		if (lY > lZ)
+		{
+			// Zめり込みが一番少ない
+			if (diffZ >= 0)
+			{
+				// 固定物が奥側にある
+				D3DXVECTOR3 NewPos = pShapeMovable->pParentTransform->Get_Position();
+				NewPos.z = pShapeStable->pParentTransform->Get_Position().z - (pShapeStable->Length[0] + pShapeMovable->Length[0]);
+				pShapeMovable->pParentTransform->Set_Position(NewPos);
+			}
+			else
+			{
+				// 固定物が手前側にある
+				D3DXVECTOR3 NewPos = pShapeMovable->pParentTransform->Get_Position();
+				NewPos.z = pShapeStable->pParentTransform->Get_Position().z + (pShapeStable->Length[0] + pShapeMovable->Length[0]);
+				pShapeMovable->pParentTransform->Set_Position(NewPos);
+			}
+		}
+		else
+		{
+			// Yめり込みが一番少ない
+			if (diffY >= 0)
+			{
+				// 固定物が上側にある
+				D3DXVECTOR3 NewPos = pShapeMovable->pParentTransform->Get_Position();
+				NewPos.y = pShapeStable->pParentTransform->Get_Position().y - (pShapeStable->Length[2] + pShapeMovable->Length[2]);
+				pShapeMovable->pParentTransform->Set_Position(NewPos);
+			}
+			else
+			{
+				// 固定物が下側にある
+				D3DXVECTOR3 NewPos = pShapeMovable->pParentTransform->Get_Position();
+				NewPos.y = pShapeStable->pParentTransform->Get_Position().y + (pShapeStable->Length[2] + pShapeMovable->Length[2]);
+				pShapeMovable->pParentTransform->Set_Position(NewPos);
+			}
+		}
+	}
+	else
+	{
+		if (lX > lZ)
+		{
+			// Zめり込みが一番少ない
+			if (diffZ >= 0)
+			{
+				// 固定物が奥側にある
+				D3DXVECTOR3 NewPos = pShapeMovable->pParentTransform->Get_Position();
+				NewPos.z = pShapeStable->pParentTransform->Get_Position().z - (pShapeStable->Length[0] + pShapeMovable->Length[0]);
+				pShapeMovable->pParentTransform->Set_Position(NewPos);
+			}
+			else
+			{
+				// 固定物が手前側にある
+				D3DXVECTOR3 NewPos = pShapeMovable->pParentTransform->Get_Position();
+				NewPos.z = pShapeStable->pParentTransform->Get_Position().z + (pShapeStable->Length[0] + pShapeMovable->Length[0]);
+				pShapeMovable->pParentTransform->Set_Position(NewPos);
+			}
+		}
+		else
+		{
+			// Xめり込みが一番少ない
+			if (diffX >= 0)
+			{
+				// 固定物が右側にある
+				D3DXVECTOR3 NewPos = pShapeMovable->pParentTransform->Get_Position();
+				NewPos.x = pShapeStable->pParentTransform->Get_Position().x - (pShapeStable->Length[1] + pShapeMovable->Length[1]);
+				pShapeMovable->pParentTransform->Set_Position(NewPos);
+			}
+			else
+			{
+				// 固定物が左側にある
+				D3DXVECTOR3 NewPos = pShapeMovable->pParentTransform->Get_Position();
+				NewPos.x = pShapeStable->pParentTransform->Get_Position().x + (pShapeStable->Length[1] + pShapeMovable->Length[1]);
+				pShapeMovable->pParentTransform->Set_Position(NewPos);
+			}
+		}
+	}
+}

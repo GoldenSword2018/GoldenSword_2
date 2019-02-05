@@ -122,8 +122,7 @@ public:
 	static bool OBBVsSphere(ShapeOBB& OBB, ShapeSphere& Sphere) {};
 	static bool OBBVsOBB( ShapeOBB& OBB0, ShapeOBB& OBB1 );
 };
-//-------------------------------------
-//	ƒNƒ‰ƒX–¼
-//-------------------------------------
+
+void Collision_PushBack(ShapeOBB *pShapeMovable, ShapeOBB *pShapeStable);
 
 #endif
