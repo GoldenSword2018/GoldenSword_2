@@ -98,6 +98,8 @@ public:
 public:
 	void Set_Main();			//メインカメラに設定
 	void LookingAt(D3DXVECTOR3 AtPosition);
+
+//----virtual-------------------------------------------------------------------------
 public:
 	virtual void Update() PURE;	//更新処理
 };
