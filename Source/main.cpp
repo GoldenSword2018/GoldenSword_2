@@ -68,7 +68,7 @@ void Main_Initialize(void)
 	//fbx::Finalize();
 
 	//Å‰‚ÌƒV[ƒ““Ç‚İ‚İ
-	NSCENE::LoadScene(Get_GunSetting());
+	NSCENE::LoadScene(Get_TitleScene());
 
 	//‰Šú‰»
 	NSCENE::Initialize();

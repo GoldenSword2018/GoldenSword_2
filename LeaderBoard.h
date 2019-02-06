@@ -41,4 +41,4 @@ void Finalize( void ); // åƒÇ‘Ç∆è¡Ç¶ÇÈÇº
 /* ----- íçãL<íÜ> -----*/
 // íçãL<è¨>
 
-#endif // _LEADER_BOARD_H_
+#endif // _LEADER_BOARD_H_6
