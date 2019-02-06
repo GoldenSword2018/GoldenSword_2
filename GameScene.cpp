@@ -44,6 +44,9 @@
 #include"CTimer.h"
 #include"TimeRender.h"
 
+#include"CScrew.h"
+#include"Screwdrop.h"
+
 //===============================================
 //	ƒ}ƒNƒ’è‹`		define
 //===============================================
@@ -97,16 +100,27 @@ void GameScene::Initialize()
 	Player->Camera.Set_Main();
 
 	CBullet::Initialize();
-	CTarget::g_Initialize();
+	//CTarget::g_Initialize();
+	CScrew::g_Initialize();
 
 	g_MaxTarget = 50;
 	for(int i = 0; i < g_MaxTarget; i++)
 	{
+		/*
 		CTarget::Create({
 			(float)( 50 - rand() % 100 ),
 			(float)( 10 + rand() % 10  ),
 			(float)( 50 - rand() % 100 )
 		});
+		*/
+		CScrew::Create(
+		{
+			(float)(50 - rand() % 100),
+			(float)(10 + rand() % 10),
+			(float)(50 - rand() % 100)
+		},
+		{ 0.0f, 0.0f, 1.0f}
+		);
 	}
 
 	Fade_Triger(false, 100.0f, D3DCOLOR_RGBA(255, 255, 255, 255));
@@ -114,6 +128,7 @@ void GameScene::Initialize()
 	g_Time = SystemTimer_GetAbsoluteTime();
 	Cube_Initialize();
 	Timer::Start();
+	Screwdrop_Init();
 }
 
 //-------------------------------------
@@ -123,7 +138,8 @@ void GameScene::UpdateBegin()
 {
 	Player->Update();
 	CBullet::Update();
-	CTarget::g_Update();
+	//CTarget::g_Update();
+	CScrew::g_Update();
 
 	for(int i = 0; i <BULLET_NUM; i++)
 	{
@@ -141,13 +157,21 @@ void GameScene::UpdateBegin()
 		}
 	}
 
+	if(Keyboard_IsTrigger(DIK_R))
+	{
+		Screwdrop_Create({ 0.0f,2.0f,0.0f }, {0.0f,-1.0f,0.0f});
+	}
+
+	/*
 	if(Get_TargetNum() <= 0)
 	{
 		NSCENE::LoadScene(Get_ResultScene());
 		Fade_Triger(true, 10, D3DCOLOR_RGBA(255, 255, 255, 255));
 	}
+	*/
 
 	Timer::Update(Get_ResultScene());
+	Screwdrop_Update();
 }
 
 //-------------------------------------
@@ -168,7 +192,10 @@ void GameScene::Render()
 	{
 		NRender2D::UI::CircleIndicator({ 120,500 }, D3DCOLOR_RGBA(255, 255, 255, 255), D3DCOLOR_RGBA(255, 0, 0, 255), 50, 20, g_MaxTarget - Get_TargetNum(), g_MaxTarget);
 	}
-	CTarget::g_Render();
+
+	//CTarget::g_Render();
+	CScrew::g_Render();
+	Screwdrop_Render();
 	Player->Render();
 	CBullet::Render();
 	NRender2D::Sprite({ 120,500 }, { 100,50 }, D3DCOLOR_RGBA(255, 255, 255, 255), NTexture::Get_Texture(NTexture::TargetText));
@@ -201,7 +228,8 @@ void GameScene::UpdateEnd()
 void GameScene::Finalize()
 {
 	CBullet::Finalize();
-	CTarget::g_Finalize();
+	//CTarget::g_Finalize();
+	CScrew::g_Finalize();
 	delete Player;
 	g_Time = SystemTimer_GetAbsoluteTime() - g_Time;
 	Cube_Finalize();
