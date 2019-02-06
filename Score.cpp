@@ -37,11 +37,12 @@ void Score_Initialize(void)
 //------------------------------------
 void Score_Render(void)
 {
+	int score = g_score;
 	for (int i = 0; i < FIG; i++)
 	{
-		int number = g_score % 10;
-		g_score /= 10;
-		Number_Render({SCORE_X + 32 * (FIG - (i + 1)), SCORE_Y}, number);
+		int number = score % 10;
+		score /= 10;
+		Number_Render({SCORE_X + (NTexture::Get_Width(NTexture::ScoreTex)*0.15f) * (FIG - (i + 1)), SCORE_Y}, number);
 	}
 }
 
@@ -59,8 +60,8 @@ void Score_Plus(int Item)
 void Number_Render(D3DXVECTOR2 Position, int Number)
 {
 	float tx;
-	tx = Number / 10;
-	NRender2D::Sprite(Position, D3DXVECTOR2(1.0f,1.0f),D3DCOLOR_RGBA(255,255,255,255), NTexture::Get_Texture(NTexture::NumberTex), D3DXVECTOR2(tx,0), D3DXVECTOR2(0.1,1));
+	tx = (float)Number / 10;
+	NRender2D::Sprite(Position, D3DXVECTOR2(100.0f,100.0f),D3DCOLOR_RGBA(255,255,255,255), NTexture::Get_Texture(NTexture::ScoreTex), D3DXVECTOR2(tx,0), D3DXVECTOR2(0.1,1));
 }
 
 //------------------------------------

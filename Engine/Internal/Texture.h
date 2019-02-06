@@ -25,14 +25,16 @@ namespace NTexture
 	{
 		CubeTexture,
 		BillBoardTex,
-		MeshFieldTex,
-		MeshCylinderTex,
+		MeshField_Ground,
+		MeshField_Sky,
 		Billboard_Burst,
 		Billboard_Shadow,
 		Mesh_Wall,
 		Reticle,
 		TargetText,
 		NumberTex,
+		ScoreTex,
+		BlockTex,
 		NAME_NONE,		//指定無い場合
 		NAME_END,	//テクスチャ終わり
 	};

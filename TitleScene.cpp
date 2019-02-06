@@ -30,6 +30,10 @@
 //Scene
 #include"GameScene.h"
 
+#include"Score.h"
+
+#include"LeaderBoard.h"
+
 //===============================================
 //	ƒ}ƒNƒ’è‹`		define
 //===============================================
@@ -49,7 +53,6 @@ static Camera MainCamera;
 //Assets
 static NRender2D::UI::MouseUI* GameStart;
 static NRender2D::CSprite* TitleImage;
-
 //===============================================
 //	ŠÖ”
 //===============================================
@@ -65,16 +68,20 @@ void TitleScene::Initialize()
 
 	TitleImage = new NRender2D::CSprite(
 		new Transform2({ WINDOWSCREEN_WIDTH_2,WINDOWSCREEN_HEIGHT_2 }, { WINDOWSCREEN_WIDTH,WINDOWSCREEN_HEIGHT }, 0),
-		new NTexture::PathTexture("Title.png"),
+		new NTexture::PathTexture("title.jpg"),
 		D3DCOLOR_RGBA(255,255,255,255)
 	);
 
 	Fade_Triger(false, 10, D3DCOLOR_RGBA(0, 0, 0, 255));
+	Score_Initialize();
+	LeaderBoard::SetNewScore(10);
+	LeaderBoard::SetNewScore(200);
+	LeaderBoard::SetNewScore(150);
 }
 
 void TitleScene::UpdateBegin()
 {
-
+	Score_Plus(1);
 	MainCamera.Update();
 	if(GameStart->Click())
 	{
@@ -87,6 +94,8 @@ void TitleScene::Render()
 {
 	TitleImage->Render();
 	GameStart->Render();
+	Score_Render();
+	LeaderBoard::Render();
 }
 
 void TitleScene::UpdateEnd()
