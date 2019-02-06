@@ -36,6 +36,8 @@
 
 #include"LeaderBoard.h"
 
+#include"GunSetting.h"
+
 //===============================================
 //	グローバル変数
 //===============================================
@@ -66,7 +68,7 @@ void Main_Initialize(void)
 	//fbx::Finalize();
 
 	//最初のシーン読み込み
-	NSCENE::LoadScene(Get_TitleScene());
+	NSCENE::LoadScene(Get_GunSetting());
 
 	//初期化
 	NSCENE::Initialize();
