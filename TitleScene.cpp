@@ -68,7 +68,7 @@ void TitleScene::Initialize()
 
 	TitleImage = new NRender2D::CSprite(
 		new Transform2({ WINDOWSCREEN_WIDTH_2,WINDOWSCREEN_HEIGHT_2 }, { WINDOWSCREEN_WIDTH,WINDOWSCREEN_HEIGHT }, 0),
-		new NTexture::PathTexture("Title.png"),
+		new NTexture::PathTexture("title.jpg"),
 		D3DCOLOR_RGBA(255,255,255,255)
 	);
 
