@@ -64,8 +64,7 @@ CPlayer::CPlayer(CTransform* transform, AMesh* mesh)
 //-------------------------------------
 CPlayer::~CPlayer()
 {
-	delete this->transform;
-	delete this->mesh;
+
 }
 
 //-------------------------------------

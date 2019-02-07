@@ -47,6 +47,7 @@ namespace NRender3D
 
 	CGameObject::~CGameObject()
 	{
-
+		delete this->transform;
+		delete this->mesh;
 	}
 }
