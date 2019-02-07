@@ -53,10 +53,10 @@
 #define MF_SHPERE_GRID_WIDTH		(50)	//縦グリッド数
 
 #define MF_SHPERE_ANGLE_WIDTH		((2*M_PI) / MF_SHPERE_GRID_WIDTH)	//1グリッド角度 横
-#define MF_SHPERE_ANGLE_HEIGHT		((M_PI) / MF_SHPERE_GRID_HEIGHT)	//1グリッド角度 縦
+#define MF_SHPERE_ANGLE_HEIGHT		((2*M_PI) / MF_SHPERE_GRID_HEIGHT)	//1グリッド角度 縦
 
-#define MF_SHPERE_TEXGRID_WIDTH		(1.0f)	//横のテクスチャ反復数
-#define MF_SHPERE_TEXGRID_HEIGHT	(1.0f)	//縦のテクスチャ反復数
+#define MF_SHPERE_TEXGRID_WIDTH		(9.0f)	//横のテクスチャ反復数
+#define MF_SHPERE_TEXGRID_HEIGHT	(6.0f)	//縦のテクスチャ反復数
 
 //-------------------------------------
 //	SkyDome

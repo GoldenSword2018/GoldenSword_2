@@ -294,7 +294,7 @@ namespace NMeshField
 
 		for(int i=0;i<MF_SHPERE_GRID_HEIGHT + 1; i++)
 		{
-			float y		 = (float)MF_SHPERE_RAIDUS * cosf((float)MF_SHPERE_ANGLE_HEIGHT * i);
+			float y		 = (float)MF_SHPERE_RAIDUS * -cosf((float)MF_SHPERE_ANGLE_HEIGHT * i);
 			float radius = (float)MF_SHPERE_RAIDUS * sinf((float)MF_SHPERE_ANGLE_HEIGHT * i);
 
 			for(int j = 0; j < MF_SHPERE_GRID_WIDTH + 1; j++)
@@ -539,7 +539,6 @@ namespace NMeshField
 	{
 		LPDIRECT3DDEVICE9 Device = System_GetDevice();
 		D3DXMATRIX mtxWorld;
-		Device->SetRenderState(D3DRS_FILLMODE,D3DFILL_WIREFRAME);
 		D3DXMatrixTranslation(&mtxWorld, Center.x, Center.y, Center.z);
 		Device->SetTransform(D3DTS_WORLD, &mtxWorld);
 		Device->SetMaterial(&g_Material);
