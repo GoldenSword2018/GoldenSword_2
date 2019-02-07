@@ -67,6 +67,7 @@ namespace NModel
 		BULLET,
 		GUN,
 		TARGET,
+		SIGHT,
 		NAME_END,
 		MODEL_NONE
 	};

@@ -56,7 +56,8 @@ namespace NModel
 		{ TREE,"Tree","Tree.x" },
 		{ BULLET,"Bullet","Bullet.x"},
 		{ GUN,"Gun","Gun.x"},
-		{ TARGET,"Target","Target.x"}
+		{ TARGET,"Target","Target.x"},
+		{ SIGHT,"Sight","sight.x"}
 	};
 
 	//ÉfÅ[É^ï€ë∂
