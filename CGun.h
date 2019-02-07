@@ -49,6 +49,8 @@ class CGun:public NRender3D::CGameObject
 {
 private:
 	D3DXVECTOR3 Muzzle;		//’eŒûˆÊ’u
+public:
+	D3DXVECTOR3 Sight;		//Æ€Ší
 
 private:
 	int rate;		//ƒŒ[ƒg(frame)
