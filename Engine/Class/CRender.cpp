@@ -26,7 +26,7 @@ namespace NRender3D
 
 		//s—ñÝ’è
 		System_GetDevice()->SetTransform(D3DTS_WORLD, &pTransform->Get_MtxWorld());
-
+		
 		pModel->begin();		//ƒ‚ƒfƒ‹‚Ì•`‰æ
 	}
 

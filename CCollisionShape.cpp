@@ -100,7 +100,7 @@ ShapeSphere::~ShapeSphere()
 //-------------------------------------
 void ShapeSphere::DebugDraw()
 {
-	DebugCollisionModule::GetInstance()->BatchDraw( this );
+//	DebugCollisionModule::GetInstance()->BatchDraw( this );
 }
 //===============================================
 //	ShapeOBB クラス
@@ -151,7 +151,7 @@ ShapeOBB::~ShapeOBB()
 //-------------------------------------
 void ShapeOBB::DebugDraw()
 {
-	DebugCollisionModule::GetInstance()->BatchDraw( this );
+//	DebugCollisionModule::GetInstance()->BatchDraw( this );
 }
 //===============================================
 //	Collision クラス
