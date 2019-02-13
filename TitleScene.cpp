@@ -29,7 +29,11 @@
 
 //Scene
 #include"GameScene.h"
+#include"GunSetting.h"
 
+#include"Score.h"
+
+#include"LeaderBoard.h"
 //===============================================
 //	ƒ}ƒNƒ’è‹`		define
 //===============================================
@@ -49,7 +53,6 @@ static Camera MainCamera;
 //Assets
 static NRender2D::UI::MouseUI* GameStart;
 static NRender2D::CSprite* TitleImage;
-
 //===============================================
 //	ŠÖ”
 //===============================================
@@ -65,7 +68,7 @@ void TitleScene::Initialize()
 
 	TitleImage = new NRender2D::CSprite(
 		new Transform2({ WINDOWSCREEN_WIDTH_2,WINDOWSCREEN_HEIGHT_2 }, { WINDOWSCREEN_WIDTH,WINDOWSCREEN_HEIGHT }, 0),
-		new NTexture::PathTexture("Title.png"),
+		new NTexture::PathTexture("title.jpg"),
 		D3DCOLOR_RGBA(255,255,255,255)
 	);
 
@@ -74,11 +77,10 @@ void TitleScene::Initialize()
 
 void TitleScene::UpdateBegin()
 {
-
 	MainCamera.Update();
 	if(GameStart->Click())
 	{
-		NSCENE::LoadScene(Get_GameScene());
+		NSCENE::LoadScene(Get_GunSetting());
 		Fade_Triger(true,10,D3DCOLOR_RGBA(255,255,255,255));
 	}
 }

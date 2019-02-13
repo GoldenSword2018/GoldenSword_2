@@ -18,8 +18,7 @@
 
 //Class
 #include"CGameObject.h"
-#include"CCollision.h"
-
+#include"Collider.h"
 //================================================
 //	マクロ定義	define
 //================================================
@@ -49,10 +48,11 @@ class CBullet:public NRender3D::CGameObject
 {
 private:
 	NTexture::CAnimation animation;
+	D3DXMATRIX mtxWorld;
 public:
 	bool bEnable;
 	int frame;
-	Collision::Sphere ColSphere;
+	ShapeSphere Collider;
 public:
 	//コンストラクタ
 	CBullet();

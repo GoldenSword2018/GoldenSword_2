@@ -108,7 +108,7 @@ public:
 };
 
 //===============================================
-//	CXModelName Xƒ‚ƒfƒ‹–¼
+//	CXModelName Xƒ‚ƒfƒ‹–¼‚Å•`‰æ
 //===============================================
 class CXModelName :public AMesh
 {
@@ -117,6 +117,17 @@ public:
 	NModel::Name Model;
 public:
 	CXModelName(NModel::Name name);
+public:
+	void begin() override;
+};
+
+class CXModelData:public AMesh
+{
+public:
+	static AMesh* Model;
+public:
+	CXModelData();
+	~CXModelData();
 public:
 	void begin() override;
 };

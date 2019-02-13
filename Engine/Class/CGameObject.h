@@ -26,6 +26,8 @@ namespace NRender3D
 		CGameObject();
 		CGameObject(CTransform* transform,AMesh* mesh);
 		~CGameObject();
+	public:
+		virtual void render();
 	};
 }
 

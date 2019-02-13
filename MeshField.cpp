@@ -51,6 +51,16 @@ WORD* g_pCylinder_Index = NULL;
 
 const int Cylinder_VertexNum = (MF_CYLINDER_GRID_WIDTH + 1) * (MF_CYLINDER_GRID_HEIGHT + 1) + ((MF_CYLINDER_GRID_HEIGHT - 1) * 2);
 
+//	MeshField Shpere
+//-------------------------------------
+LPDIRECT3DVERTEXBUFFER9 g_pShpere_VertexBuffer = NULL;
+LPDIRECT3DINDEXBUFFER9	g_pShpere_IndexBuffer = NULL;
+
+Vertex3D* g_pShpere_Vertex = NULL;
+WORD* g_pShpere_Index = NULL;
+
+const int Shpere_VertexNum = (MF_SHPERE_GRID_WIDTH + 1) * (MF_SHPERE_GRID_HEIGHT + 1) + ((MF_SHPERE_GRID_HEIGHT- 1) * 2);
+
 //	MeshField SkyDome
 //-------------------------------------
 LPDIRECT3DVERTEXBUFFER9 g_pSkyDome_VertexBuffer = NULL;
@@ -253,6 +263,81 @@ namespace NMeshField
 	}
 
 	//------------------------------------
+	//	Initialize Shpere
+	//------------------------------------
+	void Init_Shpere()
+	{
+		LPDIRECT3DDEVICE9 Device = System_GetDevice();
+		Device->CreateVertexBuffer(
+			sizeof(Vertex3D) * (MF_SHPERE_GRID_WIDTH + 1) * (MF_SHPERE_GRID_WIDTH + 1),
+			D3DUSAGE_WRITEONLY,
+			FVF_MF_VERTEX3D,
+			D3DPOOL_MANAGED,
+			&g_pShpere_VertexBuffer,
+			NULL
+		);
+		Device->CreateIndexBuffer(
+			sizeof(DWORD)* Shpere_VertexNum,
+			D3DUSAGE_WRITEONLY,
+			D3DFMT_INDEX16,
+			D3DPOOL_MANAGED,
+			&g_pShpere_IndexBuffer,
+			NULL
+		);
+
+		int nCount = 0;
+
+		g_pShpere_VertexBuffer->Lock(0, 0, (void**)&g_pShpere_Vertex, 0);
+
+		float tw = (float)MF_SHPERE_TEXGRID_WIDTH / MF_SHPERE_GRID_WIDTH;
+		float th = (float)MF_SHPERE_TEXGRID_HEIGHT / MF_SHPERE_GRID_HEIGHT;
+
+		for(int i=0;i<MF_SHPERE_GRID_HEIGHT + 1; i++)
+		{
+			float y		 = (float)MF_SHPERE_RAIDUS * -cosf((float)MF_SHPERE_ANGLE_HEIGHT * i);
+			float radius = (float)MF_SHPERE_RAIDUS * sinf((float)MF_SHPERE_ANGLE_HEIGHT * i);
+
+			for(int j = 0; j < MF_SHPERE_GRID_WIDTH + 1; j++)
+			{
+				float x = radius * sinf((float)MF_SHPERE_ANGLE_WIDTH * j);
+				float z = radius * cosf((float)MF_SHPERE_ANGLE_WIDTH * j);
+
+				g_pShpere_Vertex[nCount].Position = { x,y,z };
+				g_pShpere_Vertex[nCount].Normal = { 0,-1,0 };
+				g_pShpere_Vertex[nCount].Coord = { tw*j,1 - (th*i) };
+				nCount++;
+			}
+		}
+
+		g_pShpere_VertexBuffer->Unlock();
+
+		nCount = 0;
+
+		g_pShpere_IndexBuffer->Lock(0,0,(void**)&g_pShpere_Index,0);
+
+		for(int i= 0; i < MF_SHPERE_GRID_HEIGHT+ 1; i++)
+		{
+			int j = 0;
+
+			if(j >0)
+			{
+				g_pShpere_Index[nCount] = g_pShpere_Index[nCount - 1];
+				g_pShpere_Index[nCount + 1] = (MF_SHPERE_GRID_WIDTH + 1) * i + j;
+				nCount += 2;
+			}
+
+			for(j; j < MF_SHPERE_GRID_WIDTH + 1; j++)
+			{
+				g_pShpere_Index[nCount] = (MF_SHPERE_GRID_WIDTH + 1) * i + j;
+				g_pShpere_Index[nCount + 1] = (MF_SHPERE_GRID_WIDTH + 1) * (i + 1) + j;
+				nCount += 2;
+			}
+		}
+
+		g_pShpere_IndexBuffer->Unlock();
+	}
+
+	//------------------------------------
 	//	Initialize_SkyDome
 	//------------------------------------
 	void Init_SkyDome()
@@ -280,8 +365,8 @@ namespace NMeshField
 
 		g_pSkyDome_VertexBuffer->Lock(0,0,(void**)&g_pSkyDome_Vertex,0);
 
-		float th = (float)(1.0f / MF_SKYDORM_GRID_HEIGHT);
-		float tw = (float)(1.0f / MF_SKYDORM_GRID_WIDTH);
+		float tw = (float)(MF_SKYDORM_TEXGRID_WIDTH / MF_SKYDORM_GRID_WIDTH);
+		float th = (float)(MF_SKYDORM_TEXGRID_HEIGHT / MF_SKYDORM_GRID_HEIGHT);
 
 		for(int i = 0; i< MF_SKYDORM_GRID_HEIGHT + 1; i++)
 		{
@@ -330,6 +415,9 @@ namespace NMeshField
 		g_pSkyDome_IndexBuffer->Unlock();
 	}
 
+	//------------------------------------
+	//	Initialize_Wall
+	//------------------------------------
 	void Init_Wall()
 	{
 		LPDIRECT3DDEVICE9 Device = System_GetDevice();
@@ -408,6 +496,7 @@ namespace NMeshField
 		
 		Init_Ground();
 		Init_Cylinder();
+		Init_Shpere();
 		Init_SkyDome();
 		Init_Wall();
 	}
@@ -443,6 +532,22 @@ namespace NMeshField
 		Device->SetIndices(g_pCylinder_IndexBuffer);
 		Device->SetTexture(0,NTexture::Get_Texture(TextureName));
 		Device->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP,0,0,Cylinder_VertexNum,0,(MF_CYLINDER_GRID_HEIGHT * MF_CYLINDER_GRID_WIDTH + ((MF_CYLINDER_GRID_HEIGHT - 1) * 2)) * 2);
+	}
+
+	//Shpere
+	void Render_Shpere(const D3DXVECTOR3 Center,const NTexture::Name TextureName)
+	{
+		LPDIRECT3DDEVICE9 Device = System_GetDevice();
+		D3DXMATRIX mtxWorld;
+		D3DXMatrixTranslation(&mtxWorld, Center.x, Center.y, Center.z);
+		Device->SetTransform(D3DTS_WORLD, &mtxWorld);
+		Device->SetMaterial(&g_Material);
+		Device->SetStreamSource(0, g_pShpere_VertexBuffer, 0, sizeof(Vertex3D));
+		Device->SetIndices(g_pShpere_IndexBuffer);
+		Device->SetFVF(FVF_MF_VERTEX3D);
+		Device->SetTexture(0, NTexture::Get_Texture(TextureName));
+		Device->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP, 0, 0, Shpere_VertexNum, 0, (MF_SHPERE_GRID_WIDTH * MF_SHPERE_GRID_HEIGHT) + (MF_SHPERE_GRID_HEIGHT -1) * 2 * 4);
+
 	}
 
 	//SkyDome
@@ -539,6 +644,22 @@ namespace NMeshField
 		}
 	}
 
+	//Finalzie_Shpere
+	void Final_Shpere()
+	{
+		if(g_pShpere_IndexBuffer)
+		{
+			g_pShpere_IndexBuffer->Release();
+			g_pShpere_IndexBuffer = NULL;
+		}
+
+		if(g_pShpere_VertexBuffer)
+		{
+			g_pShpere_VertexBuffer->Release();
+			g_pShpere_VertexBuffer = NULL;
+		}
+	}
+
 	//Finalize_SkyDome
 	void Final_SkyDome()
 	{
@@ -555,12 +676,30 @@ namespace NMeshField
 		}
 	}
 
+	//Finalize_Wall
+	void Final_Wall()
+	{
+		if(g_pWall_IndexBuffer)
+		{
+			g_pWall_IndexBuffer->Release();
+			g_pWall_IndexBuffer = NULL;
+		}
+
+		if(g_pWall_VertexBuffer)
+		{
+			g_pWall_VertexBuffer->Release();
+			g_pWall_VertexBuffer = NULL;
+		}
+	}
+
 	//------------------------------------
 	//	èIóπèàóù
 	//------------------------------------
 	void Finalize()
 	{
+		Final_Wall();
 		Final_SkyDome();
+		Final_Shpere();
 		Final_Cylinder();
 		Final_Ground();
 	}

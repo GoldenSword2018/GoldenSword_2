@@ -31,6 +31,8 @@ namespace NTexture
 	{
 		{ CubeTexture,"tex.png" },
 		{ BillBoardTex,"bullet000.png" },
+		{ MeshField_Ground,"MeshField_Ground.png" },
+		{ MeshField_Sky,"MeshField_Sky.png" },
 		{ MeshFieldTex,"MeshGround.jpg" },
 		{ MeshCylinderTex,"skytex1.jpeg" },
 		{ Billboard_Burst,"bomb.png" },
@@ -39,6 +41,16 @@ namespace NTexture
 		{ Reticle,"Reticle.png"},
 		{ TargetText,"Target_Text.png"},
 		{ NumberTex,"Number.png"},
+		{ BlockTex,"block2.png" },
+		{ BlockTex2,"block2.png" },
+		{ BlockTex3,"block3.png" },
+		{ RankingBoard,"ranking_board.png"},
+		{ ScoreTex,"Score.png"},
+		{ ScoreNumberTex,"score.png" },
+		{ TimeNumberTex,"time_suji.png" },
+		{ ScoreLetterTex,"score_moji.png" },
+		{ ScoreBackTex,"score_back.png" },
+		{ TimeBackTex,"time_back.png" },
 		{ NAME_NONE,"none.png" }
 	};
 	

@@ -22,7 +22,8 @@
 //================================================
 //	マクロ定義	define
 //================================================
-
+#define SPEED_WALK (0.05f)
+#define SPEED_RUN  (0.08f)
 
 //================================================
 //	列挙型		enum
@@ -46,23 +47,29 @@
 #include"CCamera.h"
 #include"CGun.h"
 
-class APlayer:public NRender3D::CGameObject
+#include<d3dx9.h>
+
+class CPlayer :public NRender3D::CGameObject
 {
 public:
-	APlayer();
-	~APlayer();
+	Camera Camera;
+	CGun* Gun;
+
+public:
+	float Aty;
+	float Speed;
+	bool bLean;		//[ true = 右 / false = 左 ]
+
+public:
+	CPlayer(CTransform* transform, AMesh* mesh,CGun* Gun);
+	~CPlayer();
+
 public:
 	void Update();
 	void Render();
 };
 
-class GunPlayer:public APlayer
-{
-
-};
-
-//-------------------------------------
-//	クラス名
-//-------------------------------------
+void CameraBehavior(CPlayer* const player, D3DXVECTOR3 Distance);
+void Set_GunRotate(CPlayer* const player);
 
 #endif

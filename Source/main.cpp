@@ -34,6 +34,10 @@
 #include"TitleScene.h"
 #include"SecondScene.h"
 
+#include"LeaderBoard.h"
+
+#include"GunSetting.h"
+
 //===============================================
 //	ƒOƒ[ƒoƒ‹•Ï”
 //===============================================
@@ -68,6 +72,8 @@ void Main_Initialize(void)
 
 	//‰Šú‰»
 	NSCENE::Initialize();
+
+	LeaderBoard::Init();
 }
 
 //=============================================================
@@ -130,4 +136,5 @@ void Main_Finalize(void)
 	BillBoard_Finalaize();
 	NMeshField::Finalize();
 	NModel::Finalize();
+	LeaderBoard::Finalize();
 }

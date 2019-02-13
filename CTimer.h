@@ -63,6 +63,7 @@ public:
 	static void Reset();			// フレームカウントリセット
 	static void Update(NSCENE::AScene* pNextScene);			// 更新
 	static int GetTime();			// 残り時間取得
+	static void AddTime( int second );
 };
 
 

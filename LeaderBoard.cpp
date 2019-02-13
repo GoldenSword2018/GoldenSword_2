@@ -78,6 +78,8 @@ PersonalScore& PersonalScore::operator=( const PersonalScore& obj )
 	{
 		score = obj.score;
 	}
+
+	return *this;
 }
 
 PersonalScore::~PersonalScore()
@@ -145,6 +147,8 @@ LeaderBoardModule* LeaderBoardModule::GetInstance()
 	{
 		pInstance = new LeaderBoardModule();
 	}
+	
+	return pInstance;
 }
 //
 // 関数
@@ -162,16 +166,19 @@ void LeaderBoardModule::ScoreDraw( D3DXVECTOR2 _Pos, PersonalScore _Score )
 }
 void LeaderBoardModule::Render( void )
 {
-	D3DXVECTOR2 NewScorePos = { 10.0f, 10.0f }; // 今回のスコアの表示座標
-	D3DXVECTOR2 rankingScorePos = { 100.0f, 100.0f }; // ランキングの表示座標
-	
+	D3DXVECTOR2 BoardPos = { WINDOWSCREEN_WIDTH_2, WINDOWSCREEN_HEIGHT_2 };
+	NRender2D::Sprite(new Transform2(BoardPos, D3DXVECTOR2(1000.0f, 600.0f), 0.0f), new NTexture::NameTexture(NTexture::RankingBoard, { 0.0f,0.0f }, { 1.0f,1.0f }), D3DCOLOR_RGBA(255, 255, 255, 255));
+
+	D3DXVECTOR2 NewScorePos = { 500.0f, 100.0f }; // 今回のスコアの表示座標
+	D3DXVECTOR2 rankingScorePos = { 500.0f, 240.0f }; // ランキングの表示座標
+
 	// 今回のスコア
 	if( pNewScore != nullptr )
 	{
 		ScoreDraw( NewScorePos, *pNewScore );
 	}
 	// ランキングのところ
-	float marginY = 10;
+	float marginY = 80.0f;
 	for( unsigned int sc = 0; sc < ( unsigned int ) ScoreCollection.size(); sc++ )
 	{
 		ScoreDraw( D3DXVECTOR2( rankingScorePos.x, rankingScorePos.y + marginY * sc ), ScoreCollection.at( sc ) );

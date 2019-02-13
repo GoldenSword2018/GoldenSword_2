@@ -13,6 +13,7 @@
 #include"common.h"
 #include"ResultScene.h"
 #include"TitleScene.h"
+#include"Score.h"
 
 //class
 #include"MeshField.h"
@@ -22,6 +23,7 @@
 #include"Debug_font.h"
 #include"GameScene.h"
 #include"Animation.h"
+#include"LeaderBoard.h"
 
 //===============================================
 //	ƒ}ƒNƒ’è‹`		define
@@ -56,6 +58,8 @@ void ResultScene::Initialize()
 	);
 	ScoreTex = new NTexture::NameTexture(NTexture::NumberTex, { 0.0f,0.0f }, { 0.1f,1.0f });
 
+	LeaderBoard::SetNewScore(Return_Score());
+
 	Fade_Triger(false, 100.0f, D3DCOLOR_RGBA(255, 255, 255, 255));
 }
 
@@ -76,8 +80,10 @@ void ResultScene::Render()
 	sprintf(text,"TIME:%d", Get_GameTime());
 	Animation_Score(TexScore->Transform(), ScoreTex,&AnimaScore,Get_GameTime(),true,false,4);
 	DebugFont_Draw(WINDOWSCREEN_WIDTH_2,WINDOWSCREEN_HEIGHT_2,text);
-	NMeshField::Render_Ground({0.0f,0.0f,0.0f}, NTexture::MeshFieldTex);
+	NMeshField::Render_Ground({0.0f,0.0f,0.0f}, NTexture::MeshField_Ground);
 	Result->Render();
+
+	LeaderBoard::Render();
 }
 
 void ResultScene::UpdateEnd()

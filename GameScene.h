@@ -18,11 +18,12 @@
 
 //Class
 #include"Scene.h"
+#include"Billboard.h"
+#include"MeshField.h"
 
 //================================================
 //	ƒNƒ‰ƒX		class
 //================================================
-
 class GameScene : public NSCENE::AScene
 {
 public:

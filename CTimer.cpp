@@ -93,3 +93,12 @@ int Timer::GetTime()
 {
 	return RemainTime;
 }
+
+
+//-------------------------------------
+//	ŽžŠÔ’Ç‰Á
+//-------------------------------------
+void Timer::AddTime( int sec )
+{
+	FrameCount -= sec * 60;
+}
