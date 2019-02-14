@@ -39,22 +39,24 @@
 #include"Lighting.h"
 
 #include"Cube.h"
+
+// Hewでの追記箇所
+#include"CollisionChecker.h"
+#include"CStageBlock.h"
+#include"CStageBlockManager.h"
+#include"CCoreObject.h"
+#include "Score.h"
+
 #include"CPlayer.h"
+#include"CGun.h"
 
-#include"CTimer.h"
-#include"TimeRender.h"
-
-#include"CScrew.h"
-#include"Screwdrop.h"
-
-//===============================================
-//	マクロ定義		define
-//===============================================
-
+//Scene
+#include"GunSetting.h"
 
 //===============================================
 //	関数
 //===============================================
+
 
 //===============================================
 //	グローバル変数	global
@@ -62,6 +64,7 @@
 static GameScene g_GameScene;
 static double g_Time;
 static CPlayer* Player;
+static const D3DXVECTOR3 GroundPos(0.0f,0.0f,0.0f);
 static int g_MaxTarget;
 
 static 	D3DXVECTOR3 StageWall[4] =
@@ -72,9 +75,8 @@ static 	D3DXVECTOR3 StageWall[4] =
 	{ -MF_WALL_WIDTH / 2,	0.0f,	0.0f }
 };
 
-static const D3DXVECTOR3 GroundPos(0.0f, 0.0f, 0.0f);
-
-
+// Hew
+// static CoreObject* g_pScrew;
 //===============================================
 //	関数定義
 //===============================================
@@ -93,42 +95,39 @@ void GameScene::Initialize()
 
 	Player = new CPlayer
 	(
-		new CTransform({ 0.0f,0.5f,0.0f }, { 0.1f,0.1f,0.1f }, {0.0f,0.0f,0.0f}),
-		new CXModelMesh("human_Stand.x", "Human")
+		new CTransform({ 0.0f,0.5f,0.0f }, { 0.1f,0.1f,0.1f }, { 0.0f,0.0f,0.0f }),
+		new CXModelMesh("human_Stand.x", "Human"),
+		Get_Gun()
 	);
 
 	Player->Camera.Set_Main();
 
 	CBullet::Initialize();
-	//CTarget::g_Initialize();
-	CScrew::g_Initialize();
+	CTarget::g_Initialize();
 
 	g_MaxTarget = 50;
 	for(int i = 0; i < g_MaxTarget; i++)
 	{
-		/*
 		CTarget::Create({
 			(float)( 50 - rand() % 100 ),
 			(float)( 10 + rand() % 10  ),
 			(float)( 50 - rand() % 100 )
 		});
-		*/
-		CScrew::Create(
-		{
-			(float)(50 - rand() % 100),
-			(float)(10 + rand() % 10),
-			(float)(50 - rand() % 100)
-		},
-		{ 0.0f, 0.0f, 1.0f}
-		);
 	}
 
 	Fade_Triger(false, 100.0f, D3DCOLOR_RGBA(255, 255, 255, 255));
 
 	g_Time = SystemTimer_GetAbsoluteTime();
+	Score_Initialize(); // スコアリセット！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
 	Cube_Initialize();
-	Timer::Start();
-	Screwdrop_Init();
+
+	// Hew
+	// ねじ生成
+	CoreObjectManager::GetInstance()->CreateCore( D3DXVECTOR3( 10.0f, 5.0f, 0.0f ), 4, 4, 5 );
+	CoreObjectManager::GetInstance()->CreateCore( D3DXVECTOR3( -10.0f, 5.0f, 0.0f ), 1, 1, 1 );
+	CoreObjectManager::GetInstance()->CreateCore( D3DXVECTOR3( 0.0f, 5.0f, 0.0f ), 3, 3, 3 );
+	// g_pScrew = new CoreObject( new CTransform( D3DXVECTOR3( 0, 5.0f, 10.0f ), D3DXVECTOR3( 1.0f, 1.0f, 1.0f ), D3DXVECTOR3( 0, 0, 0 ) ), new CXModelMesh( "neji.x", "neji" ), CoreObject::CORE_JUDGE_TYPE_0, CoreObject::CORE_DIRECTION_FORWARD );
+	// g_pScrew->SetBlocks( 4, 4, 5 );
 }
 
 //-------------------------------------
@@ -138,30 +137,13 @@ void GameScene::UpdateBegin()
 {
 	Player->Update();
 	CBullet::Update();
-	//CTarget::g_Update();
-	CScrew::g_Update();
+	CTarget::g_Update();
 
-	for(int i = 0; i <BULLET_NUM; i++)
+	if( CoreObjectManager::GetInstance()->GetCurrentCoreExist() == 0 )
 	{
-		if (!Get_BulletIsEnable(i)) continue;
-
-		for(int j = 0; j < TARGET_NUM; j++)
-		{
-			if (!Get_TargetIsEnable(j)) continue;
-
-			if(Collision::Judge(&Get_Bullet(i)->ColSphere, &Get_Target(j)->ColSphere))
-			{
-				Get_Bullet(i)->hit();
-				Get_Target(j)->Hit();
-			}
-		}
+		NSCENE::LoadScene( Get_ResultScene() );
+		Fade_Triger( true, 10, D3DCOLOR_RGBA( 255, 255, 255, 255 ) );
 	}
-
-	if(Keyboard_IsTrigger(DIK_R))
-	{
-		Screwdrop_Create({ 0.0f,2.0f,0.0f }, {0.0f,-1.0f,0.0f});
-	}
-
 	/*
 	if(Get_TargetNum() <= 0)
 	{
@@ -169,9 +151,10 @@ void GameScene::UpdateBegin()
 		Fade_Triger(true, 10, D3DCOLOR_RGBA(255, 255, 255, 255));
 	}
 	*/
-
-	Timer::Update(Get_ResultScene());
-	Screwdrop_Update();
+	// Hew
+	CoreObjectManager::GetInstance()->UpdateCoreAll();
+	StageBlockManager::GetInstance()->UpdateAll();
+	CollisionChecker::Getinstance()->CheckCollision();
 }
 
 //-------------------------------------
@@ -179,7 +162,7 @@ void GameScene::UpdateBegin()
 //-------------------------------------
 void GameScene::Render()
 {
-	NMeshField::Render_SkyDome(Player->transform->Get_Position(), NTexture::MeshField_Sky);
+	//NMeshField::Render_SkyDome(Player->transform->Get_Position(), NTexture::MeshCylinderTex);
 
 	//wall
 	NMeshField::Render_Wall(StageWall[0], { 1.0f,1.0f,1.0f }, { 0.0f, 0.0f,				0.0f }, NTexture::Mesh_Wall);
@@ -192,10 +175,7 @@ void GameScene::Render()
 	{
 		NRender2D::UI::CircleIndicator({ 120,500 }, D3DCOLOR_RGBA(255, 255, 255, 255), D3DCOLOR_RGBA(255, 0, 0, 255), 50, 20, g_MaxTarget - Get_TargetNum(), g_MaxTarget);
 	}
-
-	//CTarget::g_Render();
-	CScrew::g_Render();
-	Screwdrop_Render();
+	CTarget::g_Render();
 	Player->Render();
 	CBullet::Render();
 	NRender2D::Sprite({ 120,500 }, { 100,50 }, D3DCOLOR_RGBA(255, 255, 255, 255), NTexture::Get_Texture(NTexture::TargetText));
@@ -209,9 +189,13 @@ void GameScene::Render()
 	World = Scale * Trans;
 
 	System_GetDevice()->SetTransform(D3DTS_WORLD, &World);
-	System_GetDevice()->SetTexture(0,NTexture::Get_Texture(NTexture::BlockTex));
+	System_GetDevice()->SetTexture(0,NTexture::Get_Texture(NTexture::NAME_NONE));
 	Cube_Render();
-	Time_Render({200.0f,50.0f});
+
+	// Hew
+	CoreObjectManager::GetInstance()->RenderCoreAll();
+	StageBlockManager::GetInstance()->RenderAll();
+	CollisionChecker::Getinstance()->CheckCollision();
 }
 
 //-------------------------------------
@@ -228,12 +212,15 @@ void GameScene::UpdateEnd()
 void GameScene::Finalize()
 {
 	CBullet::Finalize();
-	//CTarget::g_Finalize();
-	CScrew::g_Finalize();
-	delete Player;
+	CTarget::g_Finalize();
 	g_Time = SystemTimer_GetAbsoluteTime() - g_Time;
 	Cube_Finalize();
-	Timer::Stop();
+
+	//Hew
+	StageBlock::Finalize();
+	StageBlockManager::GetInstance()->Finalize();
+	CoreObjectManager::GetInstance()->Finalize();
+	delete Player;
 }
 
 //-------------------------------------
@@ -243,6 +230,7 @@ NSCENE::AScene* Get_GameScene()
 {
 	return &g_GameScene;
 }
+
 
 int Get_GameTime()
 {
