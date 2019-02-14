@@ -158,6 +158,23 @@ void CXModelName::begin()
 	NLighting::Set_Light(FALSE);
 }
 
+AMesh* CXModelData::Model;
+
+CXModelData::CXModelData()
+{
+	
+}
+
+CXModelData::~CXModelData()
+{
+	
+}
+
+void CXModelData::begin()
+{
+	Model->begin();
+}
+
 namespace NModel
 {
 	void Load_XModelMesh(CXModelMesh* LoadMesh, char* ModelFile, char* path)

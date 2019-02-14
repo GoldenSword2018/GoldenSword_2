@@ -121,6 +121,17 @@ public:
 	void begin() override;
 };
 
+class CXModelData:public AMesh
+{
+public:
+	static AMesh* Model;
+public:
+	CXModelData();
+	~CXModelData();
+public:
+	void begin() override;
+};
+
 
 //=========================================================
 //	ä÷êî
