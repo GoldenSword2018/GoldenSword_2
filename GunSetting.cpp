@@ -7,12 +7,7 @@
 //
 //-----------------------------------------------
 
-//
-//図形から予想外なアイデア
-//動詞。述語。形容動詞。
-//代用が効く図形は無し。
-//今までに大賞で使われたものは危ない
-//
+
 
 //===============================================
 //	インクルード	include
@@ -30,6 +25,10 @@
 #include"CGun.h"
 #include"CGameObject.h"
 
+#include"Fade.h"
+
+#include"GameScene.h"
+
 //===============================================
 //	マクロ定義		define
 //===============================================
@@ -45,13 +44,15 @@
 //===============================================
 static GunSetting Scene;
 static CGun* GunObject;
-static NRender3D::CGameObject*  Sight;
 
 //Assets
 static ViewCamera* MainCamera;
 
 void GunSetting::Initialize()
 {
+	CSight::InitLoad();
+	CGun::InitLoad();
+
 	MainCamera = new ViewCamera(
 		{0.0f,5.0f,-5.0f},
 		{0.0f,0.0f,0.0f},
@@ -65,38 +66,48 @@ void GunSetting::Initialize()
 			{0.5f,0.5f,0.5f},
 			{0.0f,(float)M_PI_2,0.0f}
 		),
-		{0.0f,0.0f,0.0f},
-		10,
-		10
+		CGun::HANDGUN
 	);
-	GunObject->Sight = {0.0f,2.5f,0.0f};
-
-	Sight = new NRender3D::CGameObject(
-		new CTransform(
-			{0.0f,0.0f,0.0f},
-			{0.5f,0.5f,0.5f},
-			{0.0f,0.0f,0.0f}
-		),
-		new CXModelName(NModel::SIGHT)
-	);
-
-	Sight->transform->Set_Parent(GunObject->transform);
-	Sight->transform->Set_Position(GunObject->Sight);
-
+	
 	MainCamera->at = GunObject->transform->Get_Position();
 	MainCamera->Set_Main();
+
+	GunObject->Set(CSight::NORMAL);
+	GunObject->Set(CGun::HANDGUN);
+
+	Fade_Triger(false,10,D3DCOLOR_RGBA(255,255,255,0));
 }
 
 void GunSetting::UpdateBegin()
 {
 	MainCamera->Update();
+
+	if(Keyboard_IsTrigger(DIK_1))
+	{
+		GunObject->Set(CSight::NORMAL);
+	}
+
+	if(Keyboard_IsTrigger(DIK_2))
+	{
+		GunObject->Set(CSight::OPTICAL);
+	}
+
+	if(Keyboard_IsPress(DIK_SPACE))
+	{
+		NSCENE::LoadScene(Get_GameScene());
+	}
+
+
+	if (Mouse_IsLeftDown())
+	{
+		GunObject->transform->Rotation()->y += Mouse_IsAccelerationX() * 0.001f;
+	}
 }
 
 void GunSetting::Render()
 {
 	NMeshField::Render_Shpere({ 0.0f,0.0f,0.0f }, NTexture::MeshField_Sky);
 	GunObject->render();
-	NRender3D::Render(Sight->mesh,Sight->transform);
 }
 
 void GunSetting::UpdateEnd()
@@ -112,6 +123,11 @@ void GunSetting::Finalize()
 NSCENE::AScene* Get_GunSetting()
 {
 	return &Scene;
+}
+
+CGun* Get_Gun()
+{
+	return GunObject;
 }
 
 //-------------------------------------
@@ -131,8 +147,5 @@ ViewCamera::~ViewCamera()
 
 void ViewCamera::Update()
 {
-	this->m_Rotation.y += Mouse_IsAccelerationX() * 0.001f;
-	this->atDistance += Mouse_IsAccelerationZ() * 0.001f;
-
 	this->position = this->at - (this->Get_Forward()* this->atDistance);
 }

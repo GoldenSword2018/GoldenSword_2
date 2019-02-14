@@ -20,6 +20,8 @@
 #include"Scene.h"
 #include"CCamera.h"
 
+#include"CGun.h"
+
 //================================================
 //	É}ÉNÉçíËã`	define
 //================================================
@@ -60,6 +62,7 @@ public:
 };
 
 NSCENE::AScene* Get_GunSetting();
+CGun* Get_Gun();
 
 //-------------------------------------
 //	Camera
