@@ -39,6 +39,7 @@ namespace NTexture
 		{ Reticle,"Reticle.png"},
 		{ TargetText,"Target_Text.png"},
 		{ NumberTex,"Number.png"},
+		{ RankingBoard,"ranking_board.png"},
 		{ ScoreTex,"Score.png"},
 		{ BlockTex,"block2.png"},
 		{ NAME_NONE,"none.png" }

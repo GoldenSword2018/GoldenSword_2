@@ -33,6 +33,7 @@ namespace NTexture
 		Reticle,
 		TargetText,
 		NumberTex,
+		RankingBoard,
 		ScoreTex,
 		BlockTex,
 		NAME_NONE,		//éwíËñ≥Ç¢èÍçá
