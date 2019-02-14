@@ -18,8 +18,7 @@
 
 //Class
 #include"CGameObject.h"
-#include"CCollision.h"
-
+#include"Collider.h"
 //================================================
 //	マクロ定義	define
 //================================================
@@ -53,7 +52,7 @@ private:
 public:
 	bool bEnable;
 	int frame;
-	Collision::Sphere ColSphere;
+	ShapeSphere Collider;
 public:
 	//コンストラクタ
 	CBullet();

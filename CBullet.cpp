@@ -23,6 +23,8 @@
 #include"Billboard.h"
 #include"CBurst.h"
 
+#include"CollisionChecker.h"
+
 //===============================================
 //	ƒ}ƒNƒ’è‹`		define
 //===============================================
@@ -44,14 +46,16 @@ CBullet::CBullet()
 		new CXModelName(NModel::BULLET)
 	),
 	animation(18,6,1),
-	ColSphere(this->transform->Position(),0.5f)
+	Collider(transform, 1.0f)
 {
 	this->bEnable = false;
 	this->frame = 0;
+	CollisionChecker::Getinstance()->Register(this);
 }
 
 CBullet::~CBullet()
 {
+	CollisionChecker::Getinstance()->Deregister(this);
 	
 }
 
