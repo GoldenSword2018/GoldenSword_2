@@ -24,69 +24,165 @@
 //===============================================
 //	グローバル変数	global
 //===============================================
-
+GunData* CGun::Index[CGun::END];
 
 //===============================================
-//	クラス名		class
+//	GunData_tag
 //===============================================
 
+//-------------------------------------
+//	コンストラクタ
+//-------------------------------------
+GunData_tag::GunData_tag(
+	NRender3D::CGameObject* Model,
+	D3DXVECTOR3 SightPos,
+	D3DXVECTOR3 MuzzlePos,
+	D3DXVECTOR3 UnderBarrel,
+	D3DXVECTOR3 Magazine,
+	float Rate,
+	float Recoil,
+	int BulletNum,
+	D3DXVECTOR3 Muzzle,
+	D3DXVECTOR3 Grip
+):
+	Model(Model),
+	SightPos(SightPos),
+	MuzzlePos(MuzzlePos),
+	UnderBarrel(UnderBarrel),
+	Magazine(Magazine),
+	Rate(Rate),
+	Recoil(Recoil),
+	Max_BulletNum(BulletNum),
+	Muzzle(Muzzle),
+	Grip(Grip)
+{
+
+}
+
+//===============================================
+//	CGun
+//===============================================
 
 //-------------------------------------
 //	メンバ関数名
 //-------------------------------------
-CGun::CGun()
+
+void CGun::InitLoad()
 {
-	this->rate = 0;
-	this->wait = 0;
-	this->BulletNum = 0;
-	this->Shake = 0.0f;
-	this->transform = new CTransform();
-	this->mesh = new CXModelName(NModel::GUN);
+	Index[CGun::HANDGUN] = new GunData(
+		new NRender3D::CGameObject(
+			new CTransform({ 0.0f,0.0f,0.0f }, { 1.0f,1.0f,1.0f }, { 0.0f,0.0f,0.0f }),
+			new CXModelName(NModel::GUN)
+		),
+		D3DXVECTOR3(0.0f, 2.5f, 0.0f),
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+		10.0f,
+		0.0f,
+		10,
+		D3DXVECTOR3(0.0f, 0.0f, 9.5f),
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+	);
 }
 
-CGun::CGun(CTransform* transform, D3DXVECTOR3 Muzzle,int BulletNum, int rate)
+void CGun::FinalUnLoad()
 {
-	this->rate = rate;
-	this->wait = 0;
-	this->BulletNum = BulletNum;
-	this->Muzzle = Muzzle;
+	for(int i = 0; i<CGun::END; i++)
+	{
+		delete Index[i];
+	}
+}
+
+//-------------------------------------
+//	コンストラクタ
+//-------------------------------------
+CGun::CGun(CTransform* transform,TYPE type)
+:
+	m_type(type),
+	m_Rate(Index[type]->Rate),
+	m_Recoil(Index[type]->Recoil),
+	m_Max_BulletNum(Index[type]->Max_BulletNum),
+	m_Muzzle(Index[type]->Muzzle)
+{
 	this->transform = transform;
-	this->mesh = new CXModelName(NModel::GUN);
+	this->mesh = NULL;
+	this->m_Sight = NULL;
 }
 
+//-------------------------------------
+//	デストラクタ
+//-------------------------------------
 CGun::~CGun()
 {
 
 }
 
-D3DXVECTOR3 CGun::Get_Muzzle()
-{
-	D3DXVECTOR3 out;
-	D3DXVec3TransformCoord(&out,&this->Muzzle,&this->transform->Get_MtxWorld());
-	return out;
-}
-
-void CGun::Set_Muzzle(D3DXVECTOR3 position)
-{
-	this->Muzzle = position;
-}
-
-void CGun::render()
-{
-	NRender3D::Render(this->mesh, this->transform);
-}
-
+//-------------------------------------
+//	射撃
+//-------------------------------------
 void CGun::Burst(D3DXVECTOR3 target,float x)
 {
-	if (this->wait >= this->rate)
+	if (this->m_wait >= this->m_Rate)
 	{
 		CBullet::Create(this->Get_Muzzle(), target, x);
-		this->wait = 0;
-		this->Shake += GUN_SHAKE_VAR * 1.5f;
+		this->m_wait = 0;
 	}
 }
 
+//-------------------------------------
+//	更新
+//-------------------------------------
 void CGun::Update()
 {
-	this->wait++;
+	this->m_wait++;
 }
+
+//-------------------------------------
+//	描画
+//-------------------------------------
+void CGun::render()
+{
+	NRender3D::Render(Index[this->m_type]->Model->mesh,&this->transform->Get_MtxWorld());
+
+	if(this->m_Sight != NULL)	this->m_Sight->render();
+}
+
+
+//-------------------------------------
+//	銃口取得
+//-------------------------------------
+D3DXVECTOR3 CGun::Get_Muzzle()
+{
+	D3DXVECTOR3 out;
+	D3DXVec3TransformCoord(&out, &this->m_Muzzle, &this->transform->Get_MtxWorld());
+	return out;
+}
+
+//-------------------------------------
+//	サイトを設定
+//-------------------------------------
+void CGun::Set(CSight::TYPE type)
+{
+	if(this->m_Sight != nullptr || this->m_Sight != NULL)
+	{
+		delete this->m_Sight;
+		this->m_Sight = NULL;
+	}
+
+	this->m_Sight = new CSight();
+	this->m_Sight->Set(this->transform,Index[this->m_type]->SightPos,type);
+
+	return;
+}
+
+//-------------------------------------
+//	タイプを設定
+//-------------------------------------
+void CGun::Set(TYPE Type)
+{
+	this->m_type = Type;
+	this->m_Muzzle = Index[Type]->Muzzle;
+	this->transform->Set_Position(Index[Type]->Grip);
+}
+

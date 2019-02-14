@@ -19,6 +19,9 @@
 //Class
 #include"CGameObject.h"
 
+//パーツ
+#include"CSight.h"
+
 //================================================
 //	マクロ定義	define
 //================================================
@@ -45,34 +48,88 @@
 //	クラス		class
 //================================================
 
+typedef class GunData_tag
+{
+public:
+	NRender3D::CGameObject* Model;	//モデル
+
+	//アタッチメント位置
+	const D3DXVECTOR3 SightPos;			//サイト位置
+	const D3DXVECTOR3 MuzzlePos;		//マズル位置
+	const D3DXVECTOR3 UnderBarrel;		//アンダーバレル位置
+	const D3DXVECTOR3 Magazine;			//マガジン位置
+
+	const float Rate;				//レート
+	const float Recoil;				//リコイル
+	const int Max_BulletNum;		//マガジン総弾数
+
+	const D3DXVECTOR3 Muzzle;		//銃口位置
+	const D3DXVECTOR3 Grip;			//グリップ
+
+public:
+	GunData_tag(
+		NRender3D::CGameObject* Model,
+		D3DXVECTOR3 SightPos,
+		D3DXVECTOR3 MuzzlePos,
+		D3DXVECTOR3 UnderBarrel,
+		D3DXVECTOR3 Magazine,
+		float Rate,
+		float Recoil,
+		int BulletNum,
+		D3DXVECTOR3 Muzzle,
+		D3DXVECTOR3 Grip
+	);
+
+}GunData;
+
+//-------------------------------------
+//	CGun
+//-------------------------------------
 class CGun:public NRender3D::CGameObject
 {
-private:
-	D3DXVECTOR3 Muzzle;		//弾口位置
+//---グローバル---------------------------------------
 public:
-	D3DXVECTOR3 Sight;		//照準器
+	//銃の種類
+	typedef enum
+	{
+		HANDGUN,
+		END
+	}TYPE;
+	static GunData* Index[END];
 
-private:
-	int rate;		//レート(frame)
-	int wait;		//待機(frame)
-	int BulletNum;	//弾数
-	int Shake;		//ブレ (x0.1)
-
+//---関数---------------------------------------------
 public:
-	CGun();
-	// ・位置情報 ・銃口位置 ・弾数 ・射撃速度
-	CGun(CTransform* transform,D3DXVECTOR3 Muzzle,int BulletNum,int rate);
+	static void InitLoad();		//モデル読み込み
+	static void FinalUnLoad();	//モデル破棄
+
+//---ローカル-----------------------------------------
+private:
+	CSight* m_Sight;			//サイト
+private:
+	TYPE	m_type;				//銃の種類
+	float	m_Rate;				//レート
+	float	m_Recoil;			//リコイル
+	int		m_Max_BulletNum;	//マガジン総弾数
+	D3DXVECTOR3 m_Muzzle;		//弾口位置
+private:
+	float m_wait;				//次弾待機
+	int m_BulletNum;			//弾数
+
+//---関数---------------------------------------------
+public:
+	//コンストラクタ
+	CGun(CTransform* transform,TYPE type);
+	//デストラクタ
 	~CGun();
-
 public:
 	void Update();
-
+	void render() override;
+	void Burst(D3DXVECTOR3 target, float x);	//撃つ
 public:
-	D3DXVECTOR3 Get_Muzzle();
-	void Set_Muzzle(D3DXVECTOR3 position);
-	void render();
-	void Burst(D3DXVECTOR3 target, float x);
+	D3DXVECTOR3 Get_Muzzle();	//銃口位置取得
+public:
+	void Set(CSight::TYPE type);	//サイト設定
+	void Set(TYPE Type);		//タイプ設定
 };
-
 
 #endif
