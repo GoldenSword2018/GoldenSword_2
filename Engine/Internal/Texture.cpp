@@ -1,4 +1,4 @@
-//
+ï»¿//
 //	Texture.cpp
 //		Author:HIROMASA IKEDA	DATE:2018/09/13
 //===============================================
@@ -16,7 +16,7 @@
 namespace NTexture
 {
 	//==============================================
-	//	\‘¢‘Ì
+	//	æ§‹é€ ä½“
 	//==============================================
 	struct Path
 	{
@@ -25,9 +25,9 @@ namespace NTexture
 	};
 
 	//==============================================
-	//	ƒOƒ[ƒoƒ‹•Ï”
+	//	ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
 	//==============================================
-	static Data Index[Name::NAME_END] = //ƒf[ƒ^
+	static Data Index[Name::NAME_END] = //ãƒ‡ãƒ¼ã‚¿
 	{
 		{ CubeTexture,"tex.png" },
 		{ BillBoardTex,"bullet000.png" },
@@ -55,12 +55,12 @@ namespace NTexture
 	};
 	
 	//==============================================
-	//	ŠÖ”
+	//	é–¢æ•°
 	//==============================================
 	//
-	//	Class‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÅŒÄ‚Ño‚·‚Æ
-	//	System_GetDevice()‚È‚Ç‚ÌŠÖ”‚ÍƒRƒ“ƒpƒCƒ‹‚Éƒf[ƒ^‚ª
-	//	Šm’è‚µ‚Ä‚¢‚È‚¢—lqB
+	//	Classã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§å‘¼ã³å‡ºã™ã¨
+	//	System_GetDevice()ãªã©ã®é–¢æ•°ã¯ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚ã«ãƒ‡ãƒ¼ã‚¿ãŒ
+	//	ç¢ºå®šã—ã¦ã„ãªã„æ§˜å­ã€‚
 	//
 
 	bool Load(Data* LoadData,const char* path)
@@ -69,27 +69,27 @@ namespace NTexture
 		char ErrorText[256] = {};
 
 		char FilePath[TEXTURE_NAME_NUM + 10] = { '\0' };
-		D3DXIMAGE_INFO Texture_Info;	//‰æ‘œƒf[ƒ^î•ñ
+		D3DXIMAGE_INFO Texture_Info;	//ç”»åƒãƒ‡ãƒ¼ã‚¿æƒ…å ±
 
 		strcat(&FilePath[0], TEXTURE_FILE);
 		strcat(&FilePath[0], path);
 
-		//“Ç‚İ‚İ‚ª¸”s‚µ‚½‚É‚Íg_pTexture[i]‚Énull‚ª’u‚©‚ê‚é
+		//èª­ã¿è¾¼ã¿ãŒå¤±æ•—ã—ãŸæ™‚ã«ã¯g_pTexture[i]ã«nullãŒç½®ã‹ã‚Œã‚‹
 		hr = D3DXCreateTextureFromFile(System_GetDevice(), FilePath, &LoadData->pTexture);
 
 		if (FAILED(hr))
 		{
-			//ƒGƒ‰[‚Ì•\¦
+			//ã‚¨ãƒ©ãƒ¼ã®è¡¨ç¤º
 			strcat(ErrorText, path);
 			strcat(ErrorText, "\n");
-			MessageBox(*System_GethWnd(), ErrorText, "“Ç‚İ‚İ¸”s", MB_OK);
+			MessageBox(*System_GethWnd(), ErrorText, "èª­ã¿è¾¼ã¿å¤±æ•—", MB_OK);
 			DestroyWindow(*System_GethWnd());
 			LoadData = NULL;
 			return false;
 		}
 		else
 		{
-			//‰æ‘œƒf[ƒ^æ“¾
+			//ç”»åƒãƒ‡ãƒ¼ã‚¿å–å¾—
 			D3DXGetImageInfoFromFile(FilePath, &Texture_Info);
 			LoadData->height = Texture_Info.Height;
 			LoadData->width = Texture_Info.Width;
@@ -118,7 +118,7 @@ namespace NTexture
 	}
 
 	//------------------------------------
-	//	‰Šú‰»ˆ—
+	//	åˆæœŸåŒ–å‡¦ç†
 	//------------------------------------
 	void Initialize()
 	{
@@ -127,11 +127,11 @@ namespace NTexture
 			Load(&Index[i],&Index[i].TexturePath[0]);
 		}
 
-		NTexture::FrameInit();	//ƒtƒŒ[ƒ€‚ğ‰Šú‰»
+		NTexture::FrameInit();	//ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’åˆæœŸåŒ–
 	}
 
 	//------------------------------------
-	//	I—¹ˆ—
+	//	çµ‚äº†å‡¦ç†
 	//------------------------------------
 	void Finalize()
 	{
