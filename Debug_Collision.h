@@ -14,7 +14,7 @@
 #define DEBUG_PRIMITIVE_H
 
 #include<d3dx9.h>
-#include"CCollisionShape.h"
+#include"Collider.h"
 
 typedef struct DebugVertex_tag
 {
