@@ -29,11 +29,11 @@
 
 //Scene
 #include"GameScene.h"
+#include"GunSetting.h"
 
 #include"Score.h"
 
 #include"LeaderBoard.h"
-
 //===============================================
 //	ƒ}ƒNƒ’è‹`		define
 //===============================================
@@ -85,7 +85,7 @@ void TitleScene::UpdateBegin()
 	MainCamera.Update();
 	if(GameStart->Click())
 	{
-		NSCENE::LoadScene(Get_GameScene());
+		NSCENE::LoadScene(Get_GunSetting());
 		Fade_Triger(true,10,D3DCOLOR_RGBA(255,255,255,255));
 	}
 }
