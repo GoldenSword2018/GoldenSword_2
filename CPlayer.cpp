@@ -26,7 +26,7 @@
 //===============================================
 //	グローバル変数	global
 //===============================================
-static const D3DXVECTOR3 GunPos(1.5f, 0.0f, 2.0f);
+static const D3DXVECTOR3 GunPos(2.0f, 0.0f, 2.0f);
 
 //===============================================
 //	クラス名		class
@@ -40,14 +40,7 @@ static const D3DXVECTOR3 GunPos(1.5f, 0.0f, 2.0f);
 //	コンストラクタ
 //-------------------------------------
 
-CPlayer::CPlayer(CTransform* transform, AMesh* mesh)
-	:
-	Gun(
-		new CTransform(GunPos, { 0.5f,0.5f,0.5f }, { 0.0f,0.0f,0.0f }),
-		{ 0.0f, 0.2f, 5.5f },
-		10,
-		10
-	)
+CPlayer::CPlayer(CTransform* transform, AMesh* mesh,CGun* Gun)
 {
 	this->Aty = 0.0f;
 	this->Speed = SPEED_WALK;
@@ -56,7 +49,10 @@ CPlayer::CPlayer(CTransform* transform, AMesh* mesh)
 	this->bLean = true;
 
 	//Gunの設定
-	this->Gun.transform->Set_Parent(this->transform);
+	this->Gun = Gun;
+	*this->Gun->transform->Position() = GunPos;
+	this->Gun->transform->Set_Rotation({0.0f,0.0f,0.0f});
+	this->Gun->transform->Set_Parent(this->transform);
 }
 
 //-------------------------------------
@@ -72,7 +68,7 @@ CPlayer::~CPlayer()
 //-------------------------------------
 void CPlayer::Update()
 {
-	this->Gun.Update();
+	this->Gun->Update();
 
 	//歩行切り替え
 	if (Keyboard_IsPress(DIK_LSHIFT))
@@ -147,14 +143,14 @@ void CPlayer::Update()
 	if (Keyboard_IsTrigger(DIK_Q))
 	{
 		this->bLean = false;
-		this->Gun.transform->Position()->x = -GunPos.x;
+		this->Gun->transform->Position()->x = -GunPos.x;
 	}
 
 	//右
 	if (Keyboard_IsTrigger(DIK_E))
 	{
 		this->bLean = true;
-		this->Gun.transform->Position()->x = GunPos.x;
+		this->Gun->transform->Position()->x = GunPos.x;
 	}
 
 	//ADS
@@ -190,7 +186,7 @@ void CPlayer::Update()
 	{
 		Set_GunRotate(this);
 		this->transform->LookAt(this->Camera.at);
-		this->Gun.Burst(this->Camera.at, this->Camera.m_Rotation.x);
+		this->Gun->Burst(this->Camera.at, this->Camera.m_Rotation.x);
 	}
 
 }
@@ -203,7 +199,7 @@ void CPlayer::Render()
 	//描画
 	NRender3D::Render(this->mesh, this->transform);
 	//銃描画
-	this->Gun.render();
+	this->Gun->render();
 	//影
 	BillBoardShadow_Create(this->transform->Get_Position(), this->transform->Get_Scale() * 8.0f);
 	//レティクル
@@ -232,6 +228,6 @@ void CameraBehavior(CPlayer* const player, D3DXVECTOR3 Distance)
 //銃の回転設定
 void Set_GunRotate(CPlayer* const player)
 {
-	*player->Gun.transform->Rotation() = player->Camera.m_Rotation;
-	player->Gun.transform->Rotation()->y = 0.0f;
+	*player->Gun->transform->Rotation() = player->Camera.m_Rotation;
+	player->Gun->transform->Rotation()->y = 0.0f;
 }

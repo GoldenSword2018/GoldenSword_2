@@ -53,7 +53,7 @@ class CPlayer :public NRender3D::CGameObject
 {
 public:
 	Camera Camera;
-	CGun Gun;
+	CGun* Gun;
 
 public:
 	float Aty;
@@ -61,7 +61,7 @@ public:
 	bool bLean;		//[ true = âE / false = ç∂ ]
 
 public:
-	CPlayer(CTransform* transform, AMesh* mesh);
+	CPlayer(CTransform* transform, AMesh* mesh,CGun* Gun);
 	~CPlayer();
 
 public:
