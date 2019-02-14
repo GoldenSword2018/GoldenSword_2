@@ -50,4 +50,9 @@ namespace NRender3D
 		delete this->transform;
 		delete this->mesh;
 	}
+
+	void CGameObject::render()
+	{
+		NRender3D::Render(this->mesh,this->transform);
+	}
 }
